@@ -21,7 +21,8 @@ musicPlayer.className = 'music-player';
 musicPlayer.setAttribute('aria-label', '背景音乐播放器');
 musicPlayer.innerHTML = `
     <audio preload="metadata" src="${musicUrl.href}"></audio>
-    <button class="gramophone-button" type="button" aria-label="播放《Dixie's Land》" aria-pressed="false">
+    <button class="music-player__handle" type="button" aria-label="展开音乐播放器" aria-expanded="false" aria-controls="gramophone-control">♫</button>
+    <button id="gramophone-control" class="gramophone-button" type="button" aria-label="播放《Dixie's Land》" aria-pressed="false">
         <span class="gramophone" aria-hidden="true">
             <span class="gramophone__horn"></span>
             <span class="gramophone__neck"></span>
@@ -38,8 +39,14 @@ musicPlayer.innerHTML = `
 document.body.append(musicPlayer);
 
 const music = musicPlayer.querySelector('audio');
+const musicHandle = musicPlayer.querySelector('.music-player__handle');
 const musicButton = musicPlayer.querySelector('.gramophone-button');
 const musicState = musicPlayer.querySelector('.music-player__state');
+
+const setPlayerExpanded = (isExpanded) => {
+    musicPlayer.classList.toggle('is-expanded', isExpanded);
+    musicHandle.setAttribute('aria-expanded', String(isExpanded));
+};
 
 const updatePlayer = (isPlaying) => {
     musicPlayer.classList.toggle('is-playing', isPlaying);
@@ -57,6 +64,27 @@ musicButton.addEventListener('click', async () => {
         }
     } else {
         music.pause();
+    }
+});
+
+musicHandle.addEventListener('click', () => {
+    setPlayerExpanded(true);
+    musicButton.focus({ preventScroll: true });
+});
+
+document.addEventListener('pointerdown', (event) => {
+    if (!musicPlayer.contains(event.target)) {
+        setPlayerExpanded(false);
+        musicHandle.blur();
+        musicButton.blur();
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && musicPlayer.classList.contains('is-expanded')) {
+        setPlayerExpanded(false);
+        musicHandle.blur();
+        musicButton.blur();
     }
 });
 
