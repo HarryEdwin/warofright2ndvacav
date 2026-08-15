@@ -19,6 +19,7 @@ const honorCatalog = {
     '都督': '../assets/content/honor-staff.png'
 };
 const commandRankWeight = { '上尉': 3, '中尉': 2, '少尉': 1 };
+const maxDisplayedOfficers = 6;
 
 let viewer = null;
 let profileMap = new Map();
@@ -74,6 +75,28 @@ const createOfficerCard = async (record) => {
     return card;
 };
 
+const arrangeOfficerRows = (officers) => {
+    const sorted = officers
+        .map((officer, sourceIndex) => ({ ...officer, sourceIndex }))
+        .sort((a, b) => (commandRankWeight[b.current_rank] ?? 0) - (commandRankWeight[a.current_rank] ?? 0) || a.sourceIndex - b.sourceIndex)
+        .slice(0, maxDisplayedOfficers);
+    if (!sorted.length) return [];
+
+    const highestRank = sorted[0].current_rank;
+    const highestRankCount = sorted.filter((officer) => officer.current_rank === highestRank).length;
+    const firstRowSize = highestRankCount > 1 ? Math.min(highestRankCount, 3) : 1;
+    const rowSizes = [firstRowSize, 2, 3];
+    const rows = [];
+    let offset = 0;
+
+    rowSizes.forEach((size) => {
+        if (offset >= sorted.length) return;
+        rows.push(sorted.slice(offset, offset + size));
+        offset += size;
+    });
+    return rows;
+};
+
 const loadPublicOfficers = async () => {
     const { data: officers, error } = await companyClient.rpc('get_public_company_officers', { p_company: companyName });
     if (error) {
@@ -82,12 +105,10 @@ const loadPublicOfficers = async () => {
     }
     officerGrid.replaceChildren();
     if (officers?.length) {
-        const ranks = [...new Set(officers.map((officer) => officer.current_rank))]
-            .sort((a, b) => (commandRankWeight[b] ?? 0) - (commandRankWeight[a] ?? 0));
-        for (const rank of ranks) {
-            const rowOfficers = officers.filter((officer) => officer.current_rank === rank);
+        const rows = arrangeOfficerRows(officers);
+        for (const [index, rowOfficers] of rows.entries()) {
             const row = makeElement('div', 'officer-rank-row');
-            row.dataset.rank = rank;
+            row.dataset.row = String(index + 1);
             row.append(...await Promise.all(rowOfficers.map(createOfficerCard)));
             officerGrid.append(row);
         }
