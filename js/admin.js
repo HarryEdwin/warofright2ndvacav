@@ -13,10 +13,13 @@ const companySelect = memberForm.elements.company;
 const companyOtherField = document.querySelector('#company-other-field');
 const companyOtherInput = memberForm.elements['company-other'];
 const rankSelect = memberForm.elements['current-rank'];
+const unsavedDialog = document.querySelector('#unsaved-changes-dialog');
 
 let currentAdmin = null;
 let profiles = [];
 let records = new Map();
+let editorSnapshot = '';
+let editorCloseInProgress = false;
 
 const statusLabels = { pending: '待审核', approved: '已通过', rejected: '已拒绝', suspended: '已停用' };
 const roleLabels = { member: '普通成员', admin: '管理员', super_admin: '主管理员' };
@@ -175,6 +178,9 @@ const setRankField = (rank = '') => {
     rankSelect.value = normalizedRank;
 };
 
+const serializeMemberForm = () => new URLSearchParams(new FormData(memberForm)).toString();
+const hasUnsavedChanges = () => serializeMemberForm() !== editorSnapshot;
+
 companySelect.addEventListener('change', syncCompanyOtherField);
 
 const openEditor = (profile) => {
@@ -198,16 +204,17 @@ const openEditor = (profile) => {
     setField('admin-note', '');
     roleField.hidden = currentAdmin.role !== 'super_admin' || profile.id === currentAdmin.id;
     editorMessage.textContent = '';
+    editorSnapshot = serializeMemberForm();
     editor.showModal();
 };
 
-saveButton.addEventListener('click', async () => {
+const saveMemberChanges = async () => {
     const profileId = memberForm.elements['profile-id'].value;
     const activityTotal = numberValue('activity-total');
     const nickname = memberForm.elements.nickname.value.trim();
     if (nickname.length < 2 || nickname.length > 24) {
         editorMessage.textContent = '昵称需要 2–24 个字符。';
-        return;
+        return false;
     }
     const company = companySelect.value === '__other__'
         ? companyOtherInput.value.trim()
@@ -215,7 +222,7 @@ saveButton.addEventListener('click', async () => {
     if (companySelect.value === '__other__' && !company) {
         editorMessage.textContent = '选择“其他连队”后，请填写连队名称。';
         companyOtherInput.focus();
-        return;
+        return false;
     }
 
     saveButton.disabled = true;
@@ -260,10 +267,48 @@ saveButton.addEventListener('click', async () => {
 
     if (profileResult.error || recordResult.error || noteError) {
         editorMessage.textContent = '部分资料没有保存，请确认权限和填写内容后重试。';
-        return;
+        return false;
     }
+    editorSnapshot = serializeMemberForm();
     editor.close();
     await loadMembers();
+    return true;
+};
+
+saveButton.addEventListener('click', saveMemberChanges);
+
+const requestEditorClose = async () => {
+    if (editorCloseInProgress) return;
+    if (!hasUnsavedChanges()) {
+        editor.close();
+        return;
+    }
+    if (!unsavedDialog.open) unsavedDialog.showModal();
+};
+
+document.querySelectorAll('[data-editor-close]').forEach((button) => {
+    button.addEventListener('click', requestEditorClose);
+});
+
+memberForm.addEventListener('submit', (event) => event.preventDefault());
+editor.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    requestEditorClose();
+});
+
+unsavedDialog.querySelectorAll('[data-unsaved-action]').forEach((button) => {
+    button.addEventListener('click', async () => {
+        const action = button.dataset.unsavedAction;
+        unsavedDialog.close();
+        if (action === 'continue') return;
+        if (action === 'discard') {
+            editor.close();
+            return;
+        }
+        editorCloseInProgress = true;
+        await saveMemberChanges();
+        editorCloseInProgress = false;
+    });
 });
 
 refreshButton.addEventListener('click', loadMembers);

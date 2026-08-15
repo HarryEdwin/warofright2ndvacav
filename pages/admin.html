@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="War of Right Community 管理员控制台">
     <title>管理员控制台｜War of Right Community</title>
-    <link rel="stylesheet" href="../css/admin.css?v=20260815-2">
+    <link rel="stylesheet" href="../css/admin.css?v=20260815-3">
     <script src="../js/vendor/supabase.js" defer></script>
     <script src="../js/supabase-config.js" defer></script>
-    <script src="../js/admin.js?v=20260815-2" defer></script>
+    <script src="../js/admin.js?v=20260815-3" defer></script>
     <script src="../js/script.js?v=20260815-1" defer></script>
 </head>
 <body class="account-page admin-page">
@@ -52,7 +52,7 @@
 
     <dialog id="member-editor" class="member-editor">
         <form id="member-form" method="dialog" class="member-form">
-            <header><div><p class="eyebrow">Member Record</p><h2>编辑成员资料</h2></div><button class="dialog-close" value="cancel" aria-label="关闭" type="submit">×</button></header>
+            <header><div><p class="eyebrow">Member Record</p><h2>编辑成员资料</h2></div><button class="dialog-close" aria-label="关闭" type="button" data-editor-close>×</button></header>
             <input type="hidden" name="profile-id">
             <div class="member-form__grid">
                 <label>QQ 号<input name="qq-number" type="text" readonly></label>
@@ -110,8 +110,18 @@
                 <label class="member-form__wide">新增管理员备注<textarea name="admin-note" maxlength="2000" rows="3" placeholder="仅管理员可见；留空则不新增"></textarea></label>
             </div>
             <p id="editor-message" class="account-message" role="status"></p>
-            <footer><button class="admin-button admin-button--quiet" value="cancel" type="submit">取消</button><button id="save-member" class="admin-button" type="button">保存修改</button></footer>
+            <footer><button class="admin-button admin-button--quiet" type="button" data-editor-close>取消</button><button id="save-member" class="admin-button" type="button">保存修改</button></footer>
         </form>
+    </dialog>
+
+    <dialog id="unsaved-changes-dialog" class="unsaved-dialog">
+        <h2>保存本次修改？</h2>
+        <p>检测到成员资料已经发生变化。你可以先保存、放弃修改，或返回继续编辑。</p>
+        <div>
+            <button class="admin-button admin-button--quiet" type="button" data-unsaved-action="continue">继续编辑</button>
+            <button class="admin-button admin-button--danger" type="button" data-unsaved-action="discard">不保存</button>
+            <button class="admin-button" type="button" data-unsaved-action="save">保存并退出</button>
+        </div>
     </dialog>
 </body>
 </html>
