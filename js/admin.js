@@ -49,6 +49,19 @@ const updateStatus = async (profile, status) => {
     await loadMembers();
 };
 
+const deleteMember = async (profile) => {
+    if (currentAdmin.role !== 'super_admin' || profile.id === currentAdmin.id) return;
+    const confirmed = window.confirm(`确定永久删除“${profile.nickname}”（QQ ${profile.qq_number}）吗？\n\n账户、登录凭据和成员资料都会被删除，此操作无法撤销。`);
+    if (!confirmed) return;
+
+    const { error } = await client.rpc('delete_member_account', { p_target_profile_id: profile.id });
+    if (error) {
+        window.alert('删除失败。请确认已执行最新的数据库权限更新。');
+        return;
+    }
+    await loadMembers();
+};
+
 const makeMemberCard = (profile, includeReviewActions = false) => {
     const card = document.createElement('article');
     card.className = 'member-admin-card';
@@ -61,13 +74,19 @@ const makeMemberCard = (profile, includeReviewActions = false) => {
 
     const actions = document.createElement('div');
     actions.className = 'member-admin-card__actions';
-    if (includeReviewActions) {
+    const canEditProfile = currentAdmin.role === 'super_admin' || profile.role === 'member';
+    if (includeReviewActions && canEditProfile) {
         actions.append(
             makeButton('通过', 'admin-button', () => updateStatus(profile, 'approved')),
             makeButton('拒绝', 'admin-button admin-button--danger', () => updateStatus(profile, 'rejected'))
         );
     }
-    actions.append(makeButton('编辑资料', 'admin-button admin-button--quiet', () => openEditor(profile)));
+    if (canEditProfile) {
+        actions.append(makeButton('编辑资料', 'admin-button admin-button--quiet', () => openEditor(profile)));
+    }
+    if (currentAdmin.role === 'super_admin' && profile.id !== currentAdmin.id) {
+        actions.append(makeButton('删除账户', 'admin-button admin-button--danger', () => deleteMember(profile)));
+    }
     card.append(identity, actions);
     return card;
 };
@@ -157,7 +176,7 @@ const openEditor = (profile) => {
     setField('service-points', record.service_points ?? 0);
     setField('achievements', (record.achievements ?? []).join('，'));
     setField('admin-note', '');
-    roleField.hidden = currentAdmin.role !== 'super_admin';
+    roleField.hidden = currentAdmin.role !== 'super_admin' || profile.id === currentAdmin.id;
     editorMessage.textContent = '';
     editor.showModal();
 };
