@@ -107,7 +107,8 @@
 
 .sponsor-intro { max-width:620px; margin:-12px auto 42px; color:#5e6d73; font-size:17px; text-align:center; }
 .sponsor-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
-.sponsor-card { padding:24px 18px; border:1px solid rgba(31,93,142,.24); background:rgba(255,253,247,.72); text-align:center; }
+.sponsor-card { display:block; padding:24px 18px; border:1px solid rgba(31,93,142,.24); background:rgba(255,253,247,.72); color:inherit; text-align:center; transition:border-color .22s ease,box-shadow .22s ease,transform .22s ease; }
+.sponsor-card:hover,.sponsor-card:focus-visible { border-color:rgba(31,93,142,.56); outline:none; box-shadow:0 16px 34px rgba(35,58,70,.12); transform:translateY(-4px); }
 .sponsor-card__avatar { width:112px; height:112px; max-width:112px; max-height:112px; margin:auto; border:4px solid rgba(31,93,142,.14); border-radius:50%; object-fit:cover; }
 .sponsor-card h3 { margin:16px 0 5px; color:var(--ink-deep); font-size:20px; }
 .sponsor-card p { color:#60747e; font-size:15px; }
