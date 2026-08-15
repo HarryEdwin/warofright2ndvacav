@@ -58,7 +58,8 @@
 .account-form { display: grid; }
 .account-form[hidden] { display: none; }
 .account-form label { margin: 15px 0 7px; color: var(--ink-deep); font-size: 13px; font-weight: 700; letter-spacing: .08em; }
-.account-form input {
+.account-form input,
+.account-form select {
     width: 100%;
     min-height: 52px;
     padding: 0 16px;
@@ -71,7 +72,9 @@
     transition: border-color .2s ease, box-shadow .2s ease;
 }
 
-.account-form input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(95, 129, 152, .12); }
+.account-form select { appearance:none; background-image:linear-gradient(45deg,transparent 50%,#65747b 50%),linear-gradient(135deg,#65747b 50%,transparent 50%); background-position:calc(100% - 20px) 22px,calc(100% - 14px) 22px; background-repeat:no-repeat; background-size:6px 6px,6px 6px; cursor:pointer; }
+.account-form input:focus,
+.account-form select:focus { border-color: var(--ink); box-shadow: 0 0 0 3px rgba(95, 129, 152, .12); }
 .account-field-help { margin-top: 6px; color: #78858a; font-size: 12px; }
 .password-field { position: relative; }
 .password-field input { padding-right: 52px; }

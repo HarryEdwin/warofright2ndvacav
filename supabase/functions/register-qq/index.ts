@@ -33,7 +33,7 @@ Deno.serve(async (request) => {
     return respond(origin, 403, { error: 'origin_not_allowed' })
   }
 
-  let payload: { qq?: unknown; nickname?: unknown; password?: unknown }
+  let payload: { qq?: unknown; nickname?: unknown; password?: unknown; company?: unknown }
   try {
     payload = await request.json()
   } catch {
@@ -43,6 +43,7 @@ Deno.serve(async (request) => {
   const qq = String(payload.qq ?? '').trim()
   const nickname = String(payload.nickname ?? '').trim()
   const password = String(payload.password ?? '')
+  const company = String(payload.company ?? '').trim()
 
   if (!/^[0-9]{5,12}$/.test(qq)) {
     return respond(origin, 400, { error: 'invalid_qq' })
@@ -52,6 +53,9 @@ Deno.serve(async (request) => {
   }
   if (password.length < 8 || password.length > 72) {
     return respond(origin, 400, { error: 'invalid_password' })
+  }
+  if (!['A 连', 'SC 连'].includes(company)) {
+    return respond(origin, 400, { error: 'invalid_company' })
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -89,7 +93,7 @@ Deno.serve(async (request) => {
     email: `qq-${qq}@accounts.2ndvacav.org`,
     password,
     email_confirm: false,
-    user_metadata: { qq_number: qq, nickname },
+    user_metadata: { qq_number: qq, nickname, company },
   })
 
   if (error) {

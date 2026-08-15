@@ -8,6 +8,7 @@ const adminEntry = document.querySelector('#admin-entry');
 const logoutButton = document.querySelector('#account-logout');
 const loginForm = document.querySelector('#login-panel');
 const registerForm = document.querySelector('#register-panel');
+const registerCompany = document.querySelector('#register-company');
 const tabButtons = [...document.querySelectorAll('[data-account-tab]')];
 const passwordToggles = [...document.querySelectorAll('[data-password-toggle]')];
 const avatarSettings = document.querySelector('#avatar-settings');
@@ -19,6 +20,10 @@ const memberDirectoryEntry = document.querySelector('#member-directory-entry');
 
 const client = window.getWorSupabase();
 const qqPattern = /^[0-9]{5,12}$/;
+const allowedCompanies = new Set(['A 连', 'SC 连']);
+const accountQuery = new URLSearchParams(window.location.search);
+const requestedCompany = allowedCompanies.has(accountQuery.get('company')) ? accountQuery.get('company') : '';
+const openRegistration = accountQuery.get('action') === 'register';
 const qqToEmail = (qq) => `qq-${qq}@accounts.2ndvacav.org`;
 const messageTimers = new WeakMap();
 let currentUser = null;
@@ -43,7 +48,7 @@ const setMessage = (form, message, isSuccess = false) => {
 };
 
 const setFormBusy = (form, isBusy) => {
-    form.querySelectorAll('input, button').forEach((element) => { element.disabled = isBusy; });
+    form.querySelectorAll('input, select, button').forEach((element) => { element.disabled = isBusy; });
 };
 
 const updateAccountLinks = (label = '账户') => {
@@ -170,9 +175,10 @@ const showSignedOut = () => {
     currentUser = null;
     loginForm.reset();
     registerForm.reset();
+    registerCompany.value = requestedCompany;
     setMessage(loginForm, '');
     setMessage(registerForm, '');
-    selectTab('login');
+    selectTab(openRegistration ? 'register' : 'login');
     updateAccountLinks();
 };
 
@@ -242,9 +248,14 @@ registerForm.addEventListener('submit', async (event) => {
 
     const qq = registerForm.elements['register-qq'].value.trim();
     const nickname = registerForm.elements['register-name'].value.trim();
+    const company = registerForm.elements['register-company'].value;
     const password = registerForm.elements['register-password'].value;
     const confirmation = registerForm.elements['register-confirm'].value;
 
+    if (!allowedCompanies.has(company)) {
+        setMessage(registerForm, '请先选择想加入的连队。');
+        return;
+    }
     if (!qqPattern.test(qq)) {
         setMessage(registerForm, '请输入 5–12 位数字 QQ 号。');
         return;
@@ -265,7 +276,7 @@ registerForm.addEventListener('submit', async (event) => {
     setFormBusy(registerForm, true);
     setMessage(registerForm, '正在提交申请……');
     const { data, error } = await client.functions.invoke('register-qq', {
-        body: { qq, nickname, password }
+        body: { qq, nickname, password, company }
     });
     setFormBusy(registerForm, false);
 
@@ -282,6 +293,7 @@ registerForm.addEventListener('submit', async (event) => {
             invalid_qq: '请输入 5–12 位数字 QQ 号。',
             invalid_nickname: '社区昵称需要 2–24 个字符。',
             invalid_password: '密码长度需要在 8–72 个字符之间。',
+            invalid_company: '请选择 A 连或 SC 连。',
             origin_not_allowed: '当前页面地址未获准提交账户申请。',
             server_not_configured: '账户申请服务尚未配置完成。'
         };
@@ -291,10 +303,11 @@ registerForm.addEventListener('submit', async (event) => {
     }
 
     registerForm.reset();
+    registerCompany.value = requestedCompany;
     setMessage(registerForm, '');
     selectTab('login');
     setMessage(loginForm, data?.status === 'pending'
-        ? '申请已经提交，请于QQ通知管理员，管理员审核通过后，请使用 QQ 号和密码登录。'
+        ? `申请已经提交，申请连队为${company}。请于QQ通知管理员，管理员审核通过后，请使用 QQ 号和密码登录。`
         : '申请已经提交，请等待管理员审核。', true);
 });
 

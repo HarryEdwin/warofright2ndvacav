@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="War of Right Community 成员账户入口">
     <title>成员账户｜War of Right Community</title>
-    <link rel="stylesheet" href="../css/account.css?v=20260815-5">
+    <link rel="stylesheet" href="../css/account.css?v=20260815-6">
     <script src="../js/vendor/supabase.js" defer></script>
     <script src="../js/supabase-config.js" defer></script>
-    <script src="../js/account.js?v=20260815-4" defer></script>
+    <script src="../js/account.js?v=20260815-5" defer></script>
     <script src="../js/script.js?v=20260815-1" defer></script>
 </head>
 <body class="account-page">
@@ -58,6 +58,14 @@
                 </form>
 
                 <form id="register-panel" class="account-form" role="tabpanel" aria-labelledby="register-tab" novalidate hidden>
+                    <label for="register-company">申请连队</label>
+                    <select id="register-company" name="register-company" required>
+                        <option value="">请选择想加入的连队</option>
+                        <option value="A 连">A 连</option>
+                        <option value="SC 连">SC 连</option>
+                    </select>
+                    <p class="account-field-help">从连队介绍页进入时会自动选好；提交后管理员仍可按实际情况调整。</p>
+
                     <label for="register-qq">QQ 号</label>
                     <input id="register-qq" name="register-qq" type="text" inputmode="numeric" autocomplete="username" required minlength="5" maxlength="12" placeholder="用于登录和管理员核验">
                     <p class="account-field-help">QQ 号将作为登录 ID，注册后不可自行修改。</p>
