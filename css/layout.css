@@ -59,7 +59,11 @@ body::before {
 .hero__ribbon { width: min(100%, 680px); margin-bottom: -5px; filter: drop-shadow(0 7px 7px rgba(25,47,61,.08)); transform: translateY(-26px); }
 .hero__wolf { width: min(72vw, 430px); margin: -106px auto 0; filter: drop-shadow(0 12px 10px rgba(25,47,61,.17)); }
 .eyebrow { color: var(--red); font-size: 12px; font-weight: 700; letter-spacing: .25em; text-transform: uppercase; }
-.eyebrow__leading-number { display: inline-block; font-size: 1.5em; letter-spacing: .08em; line-height: .8; transform: translateY(.04em); }
+.eyebrow--regiment { display: inline-flex; align-items: center; gap: .55em; line-height: 1; }
+.regiment-ordinal { display: inline-flex; align-items: flex-start; letter-spacing: 0; }
+.eyebrow__leading-number { display: inline-block; font-family: Georgia, "Times New Roman", serif; font-size: 2.5em; font-weight: 700; letter-spacing: 0; line-height: .72; text-shadow: 1px 1px 0 rgba(108, 36, 33, .16); }
+.eyebrow__ordinal-suffix { margin-left: .1em; font-size: .72em; letter-spacing: .1em; line-height: 1; transform: translateY(-.18em); }
+.regiment-name { letter-spacing: .25em; }
 .hero h1 { margin-top: 2px; color: var(--ink-deep); font-size: clamp(44px, 6.5vw, 76px); font-weight: 500; letter-spacing: .11em; line-height: 1.14; text-shadow: 0 2px 0 rgba(255,255,255,.6); }
 .hero h1 span { display: block; }
 .hero-title__regiment { margin-top: .08em; font-size: clamp(30px, 4vw, 52px); white-space: nowrap; }
