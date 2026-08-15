@@ -9,6 +9,10 @@ const memberForm = document.querySelector('#member-form');
 const saveButton = document.querySelector('#save-member');
 const editorMessage = document.querySelector('#editor-message');
 const roleField = document.querySelector('#role-field');
+const companySelect = memberForm.elements.company;
+const companyOtherField = document.querySelector('#company-other-field');
+const companyOtherInput = memberForm.elements['company-other'];
+const rankSelect = memberForm.elements['current-rank'];
 
 let currentAdmin = null;
 let profiles = [];
@@ -97,6 +101,41 @@ const loadMembers = async () => {
 
 const setField = (name, value = '') => { memberForm.elements[name].value = value ?? ''; };
 const numberValue = (name) => Math.max(0, Number.parseInt(memberForm.elements[name].value || '0', 10));
+const knownCompanies = new Set(['', 'A 连', 'SC 连']);
+
+const syncCompanyOtherField = () => {
+    const usesOtherCompany = companySelect.value === '__other__';
+    companyOtherField.hidden = !usesOtherCompany;
+    companyOtherInput.required = usesOtherCompany;
+};
+
+const setCompanyField = (company = '') => {
+    const normalizedCompany = company ?? '';
+    if (knownCompanies.has(normalizedCompany)) {
+        companySelect.value = normalizedCompany;
+        companyOtherInput.value = '';
+    } else {
+        companySelect.value = '__other__';
+        companyOtherInput.value = normalizedCompany;
+    }
+    syncCompanyOtherField();
+};
+
+const setRankField = (rank = '') => {
+    rankSelect.querySelector('option[data-existing-rank]')?.remove();
+    const normalizedRank = rank ?? '';
+    const hasKnownRank = [...rankSelect.options].some((option) => option.value === normalizedRank);
+    if (normalizedRank && !hasKnownRank) {
+        const existingRank = document.createElement('option');
+        existingRank.value = normalizedRank;
+        existingRank.textContent = `${normalizedRank}（现有值）`;
+        existingRank.dataset.existingRank = '';
+        rankSelect.append(existingRank);
+    }
+    rankSelect.value = normalizedRank;
+};
+
+companySelect.addEventListener('change', syncCompanyOtherField);
 
 const openEditor = (profile) => {
     const record = records.get(profile.id) ?? {};
@@ -105,8 +144,8 @@ const openEditor = (profile) => {
     setField('nickname', profile.nickname);
     setField('account-status', profile.account_status);
     setField('role', profile.role);
-    setField('company', record.company);
-    setField('current-rank', record.current_rank);
+    setCompanyField(record.company);
+    setRankField(record.current_rank);
     setField('promotion-path', record.promotion_path);
     setField('joined-on', record.joined_on);
     setField('member-status', record.member_status || '现役');
@@ -136,6 +175,14 @@ saveButton.addEventListener('click', async () => {
         editorMessage.textContent = '累计出勤次数不能高于活动总次数。';
         return;
     }
+    const company = companySelect.value === '__other__'
+        ? companyOtherInput.value.trim()
+        : companySelect.value;
+    if (companySelect.value === '__other__' && !company) {
+        editorMessage.textContent = '选择“其他连队”后，请填写连队名称。';
+        companyOtherInput.focus();
+        return;
+    }
 
     saveButton.disabled = true;
     editorMessage.textContent = '正在保存……';
@@ -151,7 +198,7 @@ saveButton.addEventListener('click', async () => {
         .filter(Boolean);
     const memberChanges = {
         profile_id: profileId,
-        company: memberForm.elements.company.value.trim(),
+        company,
         current_rank: memberForm.elements['current-rank'].value.trim(),
         promotion_path: memberForm.elements['promotion-path'].value.trim(),
         joined_on: memberForm.elements['joined-on'].value || null,

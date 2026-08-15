@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="War of Right Community 管理员控制台">
     <title>管理员控制台｜War of Right Community</title>
-    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/admin.css?v=20260814-2">
     <script src="../js/vendor/supabase.js" defer></script>
     <script src="../js/supabase-config.js" defer></script>
-    <script src="../js/admin.js" defer></script>
+    <script src="../js/admin.js?v=20260814-2" defer></script>
     <script src="../js/script.js" defer></script>
 </head>
 <body class="account-page admin-page">
@@ -59,8 +59,45 @@
                 <label>社区昵称<input name="nickname" type="text" minlength="2" maxlength="24" required></label>
                 <label>账户状态<select name="account-status"><option value="pending">待审核</option><option value="approved">已通过</option><option value="rejected">已拒绝</option><option value="suspended">已停用</option></select></label>
                 <label id="role-field">账户权限<select name="role"><option value="member">普通成员</option><option value="admin">管理员</option><option value="super_admin">主管理员</option></select></label>
-                <label>所属连队<input name="company" type="text" maxlength="80"></label>
-                <label>当前军衔<input name="current-rank" type="text" maxlength="80"></label>
+                <label>所属连队
+                    <select name="company">
+                        <option value="">未设置</option>
+                        <option value="A 连">A 连</option>
+                        <option value="SC 连">SC 连</option>
+                        <option value="__other__">其他连队（手动填写）</option>
+                    </select>
+                </label>
+                <label id="company-other-field" hidden>其他连队名称<input name="company-other" type="text" maxlength="80" placeholder="请输入连队名称"></label>
+                <label>当前军衔
+                    <select name="current-rank">
+                        <option value="">未设置</option>
+                        <optgroup label="基础军衔">
+                            <option value="新兵">新兵</option>
+                            <option value="列兵">列兵</option>
+                            <option value="二等兵">二等兵</option>
+                            <option value="一等兵">一等兵</option>
+                            <option value="准下士">准下士</option>
+                        </optgroup>
+                        <optgroup label="战斗指挥路线">
+                            <option value="下士">下士</option>
+                            <option value="中士">中士</option>
+                            <option value="上士">上士</option>
+                            <option value="军士长">军士长</option>
+                            <option value="少尉">少尉</option>
+                            <option value="中尉">中尉</option>
+                            <option value="上尉">上尉</option>
+                        </optgroup>
+                        <optgroup label="勤务保障路线">
+                            <option value="马鞍军士">马鞍军士</option>
+                            <option value="勤务军士">勤务军士</option>
+                            <option value="军需军士">军需军士</option>
+                            <option value="参谋军士长">参谋军士长</option>
+                        </optgroup>
+                        <optgroup label="特殊职责">
+                            <option value="随军牧师">随军牧师</option>
+                        </optgroup>
+                    </select>
+                </label>
                 <label>晋升路线<input name="promotion-path" type="text" maxlength="120"></label>
                 <label>入队日期<input name="joined-on" type="date"></label>
                 <label>成员状态<input name="member-status" type="text" maxlength="40"></label>
