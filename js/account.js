@@ -15,6 +15,10 @@ const avatarFile = document.querySelector('#avatar-file');
 const avatarSave = document.querySelector('#avatar-save');
 const avatarPreview = document.querySelector('#avatar-preview');
 const avatarMessage = document.querySelector('#avatar-message');
+const rosterPrivacy = document.querySelector('#roster-privacy');
+const rosterPrivacySave = document.querySelector('#roster-privacy-save');
+const rosterPrivacyMessage = document.querySelector('#roster-privacy-message');
+const rosterVisibilityInputs = [...document.querySelectorAll('[data-roster-visibility]')];
 
 const client = window.getWorSupabase();
 const qqPattern = /^[0-9]{5,12}$/;
@@ -22,6 +26,28 @@ const qqToEmail = (qq) => `qq-${qq}@accounts.2ndvacav.org`;
 const messageTimers = new WeakMap();
 let currentUser = null;
 let selectedAvatarFile = null;
+
+const renderRosterVisibility = (visibility = {}) => {
+    rosterVisibilityInputs.forEach((input) => {
+        input.checked = visibility?.[input.dataset.rosterVisibility] === true;
+    });
+    rosterPrivacyMessage.textContent = '';
+    rosterPrivacy.hidden = false;
+};
+
+rosterPrivacySave.addEventListener('click', async () => {
+    if (!currentUser) return;
+    const visibility = Object.fromEntries(rosterVisibilityInputs.map((input) => [
+        input.dataset.rosterVisibility,
+        input.checked
+    ]));
+    rosterPrivacySave.disabled = true;
+    rosterPrivacyMessage.textContent = '正在保存……';
+    const { error } = await client.rpc('set_own_roster_visibility', { p_visibility: visibility });
+    rosterPrivacySave.disabled = false;
+    rosterPrivacyMessage.textContent = error ? '公开设置没有保存，请确认已执行最新数据库更新。' : '公开设置已保存。';
+    rosterPrivacyMessage.classList.toggle('is-success', !error);
+});
 
 const setMessage = (form, message, isSuccess = false) => {
     const messageElement = form.querySelector('.account-message');
@@ -165,6 +191,7 @@ const showSignedOut = () => {
     adminEntry.hidden = true;
     memberProfile.hidden = true;
     avatarSettings.hidden = true;
+    rosterPrivacy.hidden = true;
     currentUser = null;
     loginForm.reset();
     registerForm.reset();
@@ -219,6 +246,7 @@ const loadSignedInAccount = async (user) => {
         updateAccountLinks(displayName);
         renderMemberRecord(record);
         avatarSettings.hidden = false;
+        renderRosterVisibility(record?.roster_visibility);
         await showAvatar(record?.avatar_path);
     } else {
         updateAccountLinks(profile.nickname);

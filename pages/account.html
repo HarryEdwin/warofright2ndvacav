@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="War of Right Community 成员账户入口">
     <title>成员账户｜War of Right Community</title>
-    <link rel="stylesheet" href="../css/account.css?v=20260815-2">
+    <link rel="stylesheet" href="../css/account.css?v=20260815-3">
     <script src="../js/vendor/supabase.js" defer></script>
     <script src="../js/supabase-config.js" defer></script>
-    <script src="../js/account.js?v=20260815-2" defer></script>
+    <script src="../js/account.js?v=20260815-3" defer></script>
     <script src="../js/script.js?v=20260815-1" defer></script>
 </head>
 <body class="account-page">
@@ -104,6 +104,27 @@
                         <button id="avatar-save" class="account-submit account-submit--compact" type="button" disabled>上传头像</button>
                     </div>
                     <p id="avatar-message" class="account-message" role="status"></p>
+                </section>
+                <section id="roster-privacy" class="roster-privacy" hidden>
+                    <div>
+                        <strong>花名册信息公开</strong>
+                        <p>昵称、所属连队、军衔和成员状态会用于花名册。以下资料仅向已登录并通过审核的团内成员公开，你可以自行选择。</p>
+                    </div>
+                    <div class="roster-privacy__options">
+                        <label><input type="checkbox" data-roster-visibility="qq_number"> QQ 号</label>
+                        <label><input type="checkbox" data-roster-visibility="promotion_path"> 晋升路线</label>
+                        <label><input type="checkbox" data-roster-visibility="joined_on"> 入队日期</label>
+                        <label><input type="checkbox" data-roster-visibility="activity_total"> 活动总次数</label>
+                        <label><input type="checkbox" data-roster-visibility="experience_points"> 经验</label>
+                        <label><input type="checkbox" data-roster-visibility="training_points"> 训练度</label>
+                        <label><input type="checkbox" data-roster-visibility="command_points"> 指挥点</label>
+                        <label><input type="checkbox" data-roster-visibility="service_points"> 勤务点</label>
+                        <label><input type="checkbox" data-roster-visibility="achievements"> 已获成就与勋表</label>
+                    </div>
+                    <div class="roster-privacy__actions">
+                        <button id="roster-privacy-save" class="account-submit account-submit--compact" type="button">保存公开设置</button>
+                        <p id="roster-privacy-message" class="account-message" role="status"></p>
+                    </div>
                 </section>
                 <div class="account-actions">
                     <a id="admin-entry" class="account-submit account-submit--link" href="admin.html" hidden>管理员控制台</a>
