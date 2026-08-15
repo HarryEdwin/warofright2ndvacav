@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="War of Right Community 管理员控制台">
+    <title>管理员控制台｜War of Right Community</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <script src="../js/vendor/supabase.js" defer></script>
+    <script src="../js/supabase-config.js" defer></script>
+    <script src="../js/admin.js" defer></script>
+    <script src="../js/script.js" defer></script>
+</head>
+<body class="account-page admin-page">
+    <header class="detail-header">
+        <a class="detail-header__brand" href="../index.html">
+            <img src="../assets/reference/image3.png" alt="狼徽">
+            <span>WAR OF RIGHT COMMUNITY</span>
+        </a>
+        <nav>
+            <a href="../index.html">首页</a>
+            <a href="account.html">我的账户</a>
+        </nav>
+    </header>
+
+    <main class="admin-main">
+        <header class="admin-heading">
+            <p class="eyebrow">Administration</p>
+            <h1>成员管理</h1>
+            <p>审核账户申请，维护成员昵称、军衔、出勤和积分资料。</p>
+        </header>
+
+        <section id="admin-gate" class="admin-gate" role="status">正在验证管理员权限……</section>
+
+        <div id="admin-console" hidden>
+            <section class="admin-section">
+                <div class="admin-section__heading">
+                    <div><p class="eyebrow">Pending</p><h2>待审核申请</h2></div>
+                    <button id="refresh-members" class="admin-button admin-button--quiet" type="button">刷新</button>
+                </div>
+                <div id="pending-list" class="member-list"></div>
+            </section>
+
+            <section class="admin-section">
+                <div class="admin-section__heading">
+                    <div><p class="eyebrow">Directory</p><h2>全部账户</h2></div>
+                </div>
+                <div id="member-list" class="member-list"></div>
+            </section>
+        </div>
+    </main>
+
+    <dialog id="member-editor" class="member-editor">
+        <form id="member-form" method="dialog" class="member-form">
+            <header><div><p class="eyebrow">Member Record</p><h2>编辑成员资料</h2></div><button class="dialog-close" value="cancel" aria-label="关闭" type="submit">×</button></header>
+            <input type="hidden" name="profile-id">
+            <div class="member-form__grid">
+                <label>QQ 号<input name="qq-number" type="text" readonly></label>
+                <label>社区昵称<input name="nickname" type="text" minlength="2" maxlength="24" required></label>
+                <label>账户状态<select name="account-status"><option value="pending">待审核</option><option value="approved">已通过</option><option value="rejected">已拒绝</option><option value="suspended">已停用</option></select></label>
+                <label id="role-field">账户权限<select name="role"><option value="member">普通成员</option><option value="admin">管理员</option><option value="super_admin">主管理员</option></select></label>
+                <label>所属连队<input name="company" type="text" maxlength="80"></label>
+                <label>当前军衔<input name="current-rank" type="text" maxlength="80"></label>
+                <label>晋升路线<input name="promotion-path" type="text" maxlength="120"></label>
+                <label>入队日期<input name="joined-on" type="date"></label>
+                <label>成员状态<input name="member-status" type="text" maxlength="40"></label>
+                <label>累计出勤次数<input name="attendance-count" type="number" min="0" step="1"></label>
+                <label>活动总次数<input name="activity-total" type="number" min="0" step="1"></label>
+                <label>经验<input name="experience-points" type="number" min="0" step="1"></label>
+                <label>训练度<input name="training-points" type="number" min="0" step="1"></label>
+                <label>指挥点<input name="command-points" type="number" min="0" step="1"></label>
+                <label>勤务点<input name="service-points" type="number" min="0" step="1"></label>
+                <label class="member-form__wide">已获得成就<input name="achievements" type="text" maxlength="500" placeholder="多个成就请用逗号分隔"></label>
+                <label class="member-form__wide">新增管理员备注<textarea name="admin-note" maxlength="2000" rows="3" placeholder="仅管理员可见；留空则不新增"></textarea></label>
+            </div>
+            <p id="editor-message" class="account-message" role="status"></p>
+            <footer><button class="admin-button admin-button--quiet" value="cancel" type="submit">取消</button><button id="save-member" class="admin-button" type="button">保存修改</button></footer>
+        </form>
+    </dialog>
+</body>
+</html>

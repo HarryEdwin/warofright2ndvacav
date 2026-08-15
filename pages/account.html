@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="War of Right Community 成员账户入口">
+    <title>成员账户｜War of Right Community</title>
+    <link rel="stylesheet" href="../css/account.css">
+    <script src="../js/vendor/supabase.js" defer></script>
+    <script src="../js/supabase-config.js" defer></script>
+    <script src="../js/account.js" defer></script>
+    <script src="../js/script.js" defer></script>
+</head>
+<body class="account-page">
+    <header class="detail-header">
+        <a class="detail-header__brand" href="../index.html">
+            <img src="../assets/reference/image3.png" alt="狼徽">
+            <span>WAR OF RIGHT COMMUNITY</span>
+        </a>
+        <nav>
+            <a href="../index.html">首页</a>
+            <a href="rules.html">规则</a>
+            <a href="account.html" data-account-link>账户</a>
+        </nav>
+    </header>
+
+    <main class="account-main">
+        <section class="account-card" aria-labelledby="account-title">
+            <div class="account-card__intro">
+                <img src="../assets/reference/image3.png" alt="星环狼徽">
+                <p class="eyebrow">Member Access</p>
+                <h1 id="account-title">成员账户</h1>
+                <p>使用 QQ 号登录。新账户提交后需由管理员核对身份并批准。</p>
+            </div>
+
+            <div id="account-loading" class="account-loading" role="status">正在连接成员系统……</div>
+
+            <div id="account-auth" class="account-auth" hidden>
+                <div class="account-tabs" role="tablist" aria-label="账户操作">
+                    <button id="login-tab" class="is-active" type="button" role="tab" aria-selected="true" aria-controls="login-panel" data-account-tab="login">登录</button>
+                    <button id="register-tab" type="button" role="tab" aria-selected="false" aria-controls="register-panel" data-account-tab="register">申请账户</button>
+                </div>
+
+                <form id="login-panel" class="account-form" role="tabpanel" aria-labelledby="login-tab" novalidate>
+                    <label for="login-qq">QQ 号</label>
+                    <input id="login-qq" name="login-qq" type="text" inputmode="numeric" autocomplete="username" required maxlength="12" placeholder="输入注册时填写的 QQ 号">
+
+                    <label for="login-password">密码</label>
+                    <div class="password-field">
+                        <input id="login-password" name="login-password" type="password" autocomplete="current-password" required maxlength="72" placeholder="输入密码">
+                        <button class="password-toggle" type="button" data-password-toggle="login-password" aria-label="显示密码" aria-pressed="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.7"/></svg>
+                        </button>
+                    </div>
+
+                    <button class="account-submit" type="submit">登录</button>
+                    <p class="account-message" role="status" aria-live="polite"></p>
+                </form>
+
+                <form id="register-panel" class="account-form" role="tabpanel" aria-labelledby="register-tab" novalidate hidden>
+                    <label for="register-qq">QQ 号</label>
+                    <input id="register-qq" name="register-qq" type="text" inputmode="numeric" autocomplete="username" required minlength="5" maxlength="12" placeholder="用于登录和管理员核验">
+                    <p class="account-field-help">QQ 号将作为登录 ID，注册后不可自行修改。</p>
+
+                    <label for="register-name">社区昵称</label>
+                    <input id="register-name" name="register-name" type="text" autocomplete="nickname" required minlength="2" maxlength="24" placeholder="2–24 个字符">
+                    <p class="account-field-help">昵称不可与其他成员重复，英文字母不区分大小写。</p>
+
+                    <label for="register-password">密码</label>
+                    <div class="password-field">
+                        <input id="register-password" name="register-password" type="password" autocomplete="new-password" required minlength="8" maxlength="72" placeholder="至少 8 个字符">
+                        <button class="password-toggle" type="button" data-password-toggle="register-password" aria-label="显示密码" aria-pressed="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.7"/></svg>
+                        </button>
+                    </div>
+
+                    <label for="register-confirm">再次输入密码</label>
+                    <div class="password-field">
+                        <input id="register-confirm" name="register-confirm" type="password" autocomplete="new-password" required minlength="8" maxlength="72" placeholder="再次输入密码">
+                        <button class="password-toggle" type="button" data-password-toggle="register-confirm" aria-label="显示密码" aria-pressed="false">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-5.5 9.5-5.5 9.5 5.5 9.5 5.5-3.5 5.5-9.5 5.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.7"/></svg>
+                        </button>
+                    </div>
+
+                    <button class="account-submit" type="submit">提交账户申请</button>
+                    <p class="account-message" role="status" aria-live="polite"></p>
+                </form>
+            </div>
+
+            <section id="account-session" class="account-session" hidden aria-live="polite">
+                <p class="eyebrow" id="session-eyebrow">Member Account</p>
+                <h2>你好，<span id="session-name"></span></h2>
+                <div id="account-status" class="account-status"></div>
+                <dl id="member-profile" class="member-profile" hidden></dl>
+                <div class="account-actions">
+                    <a id="admin-entry" class="account-submit account-submit--link" href="admin.html" hidden>管理员控制台</a>
+                    <button id="account-logout" class="account-submit account-submit--secondary" type="button">退出登录</button>
+                </div>
+            </section>
+
+            <aside class="account-notice">
+                <strong>账户审核</strong>
+                <p>提交申请不会立即获得成员权限。管理员会依据 QQ 号核验身份；账户密码由 Supabase 加密管理，管理员也无法查看。</p>
+            </aside>
+        </section>
+    </main>
+</body>
+</html>

@@ -2,6 +2,7 @@ node_modules/
 .pnpm-store/
 dist/
 .next/
+.vinext/
 .wrangler/
 .env*
 .DS_Store
@@ -18,3 +19,4 @@ assets/content/laurel.png
 assets/content/sponsor-arch.png
 assets/content/bilibili.png
 *.tgz
+backups/
