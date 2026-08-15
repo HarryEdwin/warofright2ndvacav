@@ -131,6 +131,7 @@
 .member-profile dd { margin-top: 5px; color: var(--ink-deep); }
 .account-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 .account-submit--link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.account-submit--link[hidden] { display: none; }
 
 .account-notice {
     display: grid;
