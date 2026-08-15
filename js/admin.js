@@ -62,6 +62,24 @@ const deleteMember = async (profile) => {
     await loadMembers();
 };
 
+const deleteMemberAvatar = async (profile) => {
+    if (profile.id === currentAdmin.id) return;
+    const record = records.get(profile.id);
+    if (!record?.avatar_path) return;
+    const confirmed = window.confirm(`确定移除“${profile.nickname}”上传的头像吗？`);
+    if (!confirmed) return;
+
+    const { error: storageError } = await client.storage.from('member-avatars').remove([record.avatar_path]);
+    const { error: recordError } = storageError
+        ? { error: storageError }
+        : await client.rpc('clear_member_avatar', { p_target_profile_id: profile.id });
+    if (storageError || recordError) {
+        window.alert('头像没有移除，请确认已执行最新的头像管理权限更新。');
+        return;
+    }
+    await loadMembers();
+};
+
 const makeMemberCard = (profile, includeReviewActions = false) => {
     const card = document.createElement('article');
     card.className = 'member-admin-card';
@@ -83,6 +101,9 @@ const makeMemberCard = (profile, includeReviewActions = false) => {
     }
     if (canEditProfile) {
         actions.append(makeButton('编辑资料', 'admin-button admin-button--quiet', () => openEditor(profile)));
+    }
+    if (profile.id !== currentAdmin.id && records.get(profile.id)?.avatar_path) {
+        actions.append(makeButton('移除头像', 'admin-button admin-button--danger', () => deleteMemberAvatar(profile)));
     }
     if (currentAdmin.role === 'super_admin' && profile.id !== currentAdmin.id) {
         actions.append(makeButton('删除账户', 'admin-button admin-button--danger', () => deleteMember(profile)));
