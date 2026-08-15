@@ -1,4 +1,4 @@
-@import url("./account.css");
+@import url("./account.css?v=20260815-5");
 
 .admin-main { width: min(1180px, calc(100% - 32px)); min-height: calc(100vh - 72px); margin: auto; padding: 70px 0 100px; }
 .admin-heading { margin-bottom: 42px; text-align: center; }

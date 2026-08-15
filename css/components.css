@@ -30,7 +30,7 @@
     isolation: isolate;
     transition: color .3s ease, transform .3s ease, box-shadow .3s ease;
 }
-.guide-card::before { position: absolute; inset: 0; z-index: -2; background: linear-gradient(120deg, rgba(250,246,235,.98) 35%, rgba(250,246,235,.76)), url("../assets/reference/image5.png") center / cover; content: ""; }
+.guide-card::before { position: absolute; inset: 0; z-index: -2; background: linear-gradient(120deg, rgba(250,246,235,.98) 35%, rgba(250,246,235,.76)), url("../assets/reference/image5.webp") center / cover; content: ""; }
 .guide-card::after { position: absolute; top: -70px; right: -52px; z-index: -1; width: 230px; height: 230px; border: 1px solid rgba(95,129,152,.2); border-radius: 50%; content: ""; box-shadow: 0 0 0 22px rgba(95,129,152,.05), 0 0 0 44px rgba(95,129,152,.04); }
 .guide-card:hover { transform: translateY(-5px); box-shadow: 0 20px 46px rgba(35,58,70,.13); }
 .guide-card__number { position: absolute; top: 26px; left: 32px; color: var(--red); font-size: 12px; font-weight: bold; letter-spacing: .16em; }

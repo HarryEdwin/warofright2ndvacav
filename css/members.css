@@ -1,4 +1,4 @@
-@import url("./detail.css");
+@import url("./detail.css?v=20260815-8");
 
 .directory-main { min-height:100vh; padding:72px 0 96px; }
 .directory-title { width:min(calc(100% - 40px),1420px); margin:0 auto 46px; text-align:center; }

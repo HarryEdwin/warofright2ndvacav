@@ -9,7 +9,7 @@ body::before {
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: url("../assets/reference/image21.png") center / cover;
+    background: url("../assets/reference/image21.webp") center / cover;
     content: "";
     opacity: .38;
 }
@@ -52,7 +52,7 @@ body::before {
 
 .section-shell { width: min(calc(100% - 48px), var(--content-width)); margin-inline: auto; }
 
-.hero { position: relative; min-height: 890px; padding: 116px 24px 76px; background: linear-gradient(rgba(95,129,152,.16), rgba(241,234,219,.32)), url("../assets/reference/image5.png") center / cover; }
+.hero { position: relative; min-height: 890px; padding: 116px 24px 76px; background: linear-gradient(rgba(95,129,152,.16), rgba(241,234,219,.32)), url("../assets/reference/image5.webp") center / cover; }
 .hero::after {
     position: absolute;
     right: 0;

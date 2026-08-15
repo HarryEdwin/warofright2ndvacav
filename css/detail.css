@@ -46,15 +46,10 @@
 .roster-heading { margin-bottom: 30px; text-align: center; }
 .roster-heading h2 { margin: 4px 0 10px; color: var(--ink-deep); font-size: clamp(36px, 6vw, 58px); font-weight: 500; letter-spacing: .1em; }
 .roster-heading > p:last-child { color: #65747b; }
-.roster-guest, .roster-loading { padding: 38px; border: 1px solid rgba(95,129,152,.32); background: rgba(250,246,235,.84); color: #65747b; text-align: center; }
-.roster-guest strong { color: var(--ink-deep); font-size: 22px; }
-.roster-guest p { margin: 8px 0 20px; }
-.roster-guest a { display: inline-block; padding: 12px 18px; border: 1px solid var(--ink-deep); color: var(--ink-deep); font-size: 12px; font-weight: 700; letter-spacing: .1em; }
+.roster-loading { padding: 38px; border: 1px solid rgba(95,129,152,.32); background: rgba(250,246,235,.84); color: #65747b; text-align: center; }
 .roster-content { display: grid; gap: 26px; }
 .officer-grid { display: grid; gap: 22px; }
 .officer-rank-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
-.enlisted-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
-.roster-group-title { grid-column: 1 / -1; margin: 8px 0 2px; color: var(--red); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
 .roster-officer { display: grid; width:min(100%,330px); min-height: 250px; padding: 22px; flex:0 1 330px; grid-template-columns: 42% 1fr; gap: 20px; align-items: center; border: 1px solid rgba(95,129,152,.34); background: rgba(250,246,235,.88); box-shadow: 0 18px 42px rgba(35,58,70,.09); color:inherit; text-align:left; }
 .roster-officer__portrait { display: grid; aspect-ratio: 4 / 5; place-items: center; overflow: hidden; border: 1px solid rgba(95,129,152,.3); background: rgba(95,129,152,.08); }
 .roster-officer__portrait img { width: 100%; height: 100%; object-fit: cover; }
@@ -65,10 +60,6 @@
 .officer-honor img { width:54px; height:62px; margin:auto; object-fit:contain; filter:drop-shadow(0 5px 5px rgba(67,57,15,.16)); }
 .officer-honor figcaption { margin-top:3px; overflow:hidden; color:#73776c; font-size:9px; line-height:1.25; text-overflow:ellipsis; white-space:nowrap; }
 .officer-honors__empty { grid-column:1/-1; color:#8a9498; font-size:11px; }
-.roster-enlisted { display: flex; width:100%; min-height: 74px; padding: 16px 18px; align-items: center; justify-content: space-between; gap: 14px; border:0; border-left: 3px solid rgba(95,129,152,.7); background: rgba(250,246,235,.76); color:inherit; cursor:pointer; font:inherit; text-align:left; transition:border-color .2s ease,background .2s ease,transform .2s ease; }
-.roster-enlisted:hover,.roster-enlisted:focus-visible { border-left-color:var(--red); background:rgba(255,253,247,.94); outline:none; transform:translateY(-2px); }
-.roster-enlisted__rank { color: var(--red); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
-.roster-enlisted strong { color: var(--ink-deep); font-family: Georgia,"Times New Roman",serif; font-size: 18px; font-weight: 500; text-align: right; }
 .roster-empty { grid-column: 1 / -1; padding: 28px; background: rgba(250,246,235,.72); color: #78858a; text-align: center; }
 .guestbook { margin-top: 52px; padding: 34px; border: 1px solid rgba(95,129,152,.32); background: rgba(250,246,235,.78); }
 .guestbook > header { text-align: center; }
@@ -93,7 +84,7 @@
 
 .native-sheet { position:relative; width:min(calc(100% - 32px),1080px); margin:auto; padding:86px 11% 92px; overflow:hidden; background:transparent; isolation:isolate; }
 .native-sheet::before { position:absolute; inset:0; z-index:-1; background:center / 100% 100% no-repeat; content:""; pointer-events:none; }
-.native-sheet--rules::before { background-image:url("../assets/content/rules-frame.png"); }
+.native-sheet--rules::before { background-image:url("../assets/content/rules-frame.webp"); }
 .native-sheet--achievement::before { background-image:url("../assets/content/achievement-ornament.png"); opacity:.34; }
 .native-sheet--sponsor::before { background-image:url("../assets/content/sponsor-ornament.png"); opacity:.3; }
 .native-title-image { width:min(230px,58%); max-height:210px; margin:0 auto 38px; object-fit:contain; }
@@ -165,7 +156,6 @@
     .company-profile img { width:210px; margin:auto; }
     .company-facts { grid-template-columns:1fr; }
     .officer-rank-row { flex-direction:column; align-items:center; }
-    .enlisted-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .native-sheet { padding:58px 32px 64px; }
     .honor-tree,.sponsor-grid { grid-template-columns:1fr; }
     .honor-card,.honor-card--wide { width:100%; grid-column:auto; }
@@ -189,7 +179,6 @@
     .rank-card__requirements { justify-content:flex-start; }
     .rank-special { padding:28px 12px; }
     .roster-shell { width:calc(100% - 20px); margin-top:54px; }
-    .enlisted-grid { grid-template-columns:1fr; }
     .guestbook { padding:26px 16px; }
     .guestbook-entry { padding-right:62px; }
 }
