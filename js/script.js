@@ -17,6 +17,18 @@ const playerScriptUrl = new URL(document.currentScript?.src ?? window.location.h
 const accountUrl = new URL('../pages/account.html', playerScriptUrl);
 const navigation = document.querySelector('.site-nav, .detail-header nav');
 
+const rankAbbreviations = {
+    '新兵': 'Rec', '列兵': 'Pvt', '二等兵': 'Pvt2', '一等兵': 'Pvt1', '准下士': 'LCpl',
+    '下士': 'Cpl', '中士': 'Sgt', '上士': '1stSgt', '军士长': 'SgtMaj',
+    '马鞍军士': 'SdlrSgt', '勤务军士': 'OrdSgt', '军需军士': 'QMSgt', '参谋军士长': 'SSgtMaj',
+    '少尉': '2ndLt', '中尉': '1stLt', '上尉': 'Capt', '随军牧师': 'Chap'
+};
+
+window.formatWorMemberName = (nickname, rank) => {
+    const abbreviation = rankAbbreviations[rank];
+    return abbreviation ? `${abbreviation}.${nickname}` : nickname;
+};
+
 if (navigation && !navigation.querySelector('[data-account-link]')) {
     const accountLink = document.createElement('a');
     accountLink.href = accountUrl.href;
@@ -54,11 +66,17 @@ const updateNavigationAccount = async () => {
         const accountClient = window.getWorSupabase();
         const { data: { session } } = await accountClient.auth.getSession();
         if (!session?.user) return;
-        const { data: profile } = await accountClient.from('profiles').select('nickname').eq('id', session.user.id).maybeSingle();
+        const [{ data: profile }, { data: record }] = await Promise.all([
+            accountClient.from('profiles').select('nickname, account_status').eq('id', session.user.id).maybeSingle(),
+            accountClient.from('member_records').select('current_rank').eq('profile_id', session.user.id).maybeSingle()
+        ]);
         if (!profile?.nickname) return;
+        const label = profile.account_status === 'approved'
+            ? window.formatWorMemberName(profile.nickname, record?.current_rank)
+            : profile.nickname;
         document.querySelectorAll('[data-account-link]').forEach((link) => {
-            link.textContent = profile.nickname;
-            link.setAttribute('aria-label', `当前账户：${profile.nickname}`);
+            link.textContent = label;
+            link.setAttribute('aria-label', `当前账户：${label}`);
         });
     } catch {
         // The public site remains usable if the optional account service is unavailable.

@@ -130,6 +130,14 @@
 .member-profile dt { color: #78858a; font-size: 11px; font-weight: 700; letter-spacing: .08em; }
 .member-profile dd { margin-top: 5px; color: var(--ink-deep); }
 .account-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.avatar-settings { margin: 24px 0 4px; padding: 20px; border: 1px solid rgba(95,129,152,.28); background: rgba(95,129,152,.055); text-align: left; }
+.avatar-settings[hidden] { display: none; }
+.avatar-settings strong { color: var(--ink-deep); }
+.avatar-settings > div:first-child p { margin-top: 4px; color: #718087; font-size: 12px; }
+.avatar-settings__controls { display: flex; margin-top: 16px; flex-wrap: wrap; align-items: center; gap: 10px; }
+.avatar-settings__controls img { width: 64px; height: 64px; border: 2px solid rgba(95,129,152,.28); border-radius: 50%; object-fit: cover; }
+.avatar-upload { display: inline-flex; min-height: 42px; padding: 0 15px; align-items: center; border: 1px solid var(--ink-deep); color: var(--ink-deep); cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.account-submit--compact { min-height: 42px; margin-top: 0; padding-inline: 15px; font-size: 12px; }
 .account-submit--link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .account-submit--link[hidden] { display: none; }
 

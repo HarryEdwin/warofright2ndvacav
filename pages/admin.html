@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="War of Right Community 管理员控制台">
     <title>管理员控制台｜War of Right Community</title>
-    <link rel="stylesheet" href="../css/admin.css?v=20260815-1">
+    <link rel="stylesheet" href="../css/admin.css?v=20260815-2">
     <script src="../js/vendor/supabase.js" defer></script>
     <script src="../js/supabase-config.js" defer></script>
-    <script src="../js/admin.js?v=20260814-3" defer></script>
-    <script src="../js/script.js" defer></script>
+    <script src="../js/admin.js?v=20260815-1" defer></script>
+    <script src="../js/script.js?v=20260815-1" defer></script>
 </head>
 <body class="account-page admin-page">
     <header class="detail-header">
@@ -27,7 +27,7 @@
         <header class="admin-heading">
             <p class="eyebrow">Administration</p>
             <h1>成员管理</h1>
-            <p>审核账户申请，维护成员昵称、军衔、出勤和积分资料。</p>
+            <p>审核账户申请，维护成员昵称、军衔、活动和积分资料。</p>
         </header>
 
         <section id="admin-gate" class="admin-gate" role="status">正在验证管理员权限……</section>
@@ -101,7 +101,6 @@
                 <label>晋升路线<input name="promotion-path" type="text" maxlength="120"></label>
                 <label>入队日期<input name="joined-on" type="date"></label>
                 <label>成员状态<input name="member-status" type="text" maxlength="40"></label>
-                <label>累计出勤次数<input name="attendance-count" type="number" min="0" step="1"></label>
                 <label>活动总次数<input name="activity-total" type="number" min="0" step="1"></label>
                 <label>经验<input name="experience-points" type="number" min="0" step="1"></label>
                 <label>训练度<input name="training-points" type="number" min="0" step="1"></label>

@@ -168,7 +168,6 @@ const openEditor = (profile) => {
     setField('promotion-path', record.promotion_path);
     setField('joined-on', record.joined_on);
     setField('member-status', record.member_status || '现役');
-    setField('attendance-count', record.attendance_count ?? 0);
     setField('activity-total', record.activity_total ?? 0);
     setField('experience-points', record.experience_points ?? 0);
     setField('training-points', record.training_points ?? 0);
@@ -183,15 +182,10 @@ const openEditor = (profile) => {
 
 saveButton.addEventListener('click', async () => {
     const profileId = memberForm.elements['profile-id'].value;
-    const attendanceCount = numberValue('attendance-count');
     const activityTotal = numberValue('activity-total');
     const nickname = memberForm.elements.nickname.value.trim();
     if (nickname.length < 2 || nickname.length > 24) {
         editorMessage.textContent = '昵称需要 2–24 个字符。';
-        return;
-    }
-    if (attendanceCount > activityTotal) {
-        editorMessage.textContent = '累计出勤次数不能高于活动总次数。';
         return;
     }
     const company = companySelect.value === '__other__'
@@ -222,7 +216,6 @@ saveButton.addEventListener('click', async () => {
         promotion_path: memberForm.elements['promotion-path'].value.trim(),
         joined_on: memberForm.elements['joined-on'].value || null,
         member_status: memberForm.elements['member-status'].value.trim() || '现役',
-        attendance_count: attendanceCount,
         activity_total: activityTotal,
         experience_points: numberValue('experience-points'),
         training_points: numberValue('training-points'),

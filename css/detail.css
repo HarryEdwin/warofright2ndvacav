@@ -42,6 +42,52 @@
 .company-facts strong { display: block; color: var(--red); font-size: 11px; letter-spacing: .14em; }
 .company-facts span { color: var(--ink); }
 
+.roster-shell { width: min(calc(100% - 48px), 1180px); margin: 76px auto 0; }
+.roster-heading { margin-bottom: 30px; text-align: center; }
+.roster-heading h2 { margin: 4px 0 10px; color: var(--ink-deep); font-size: clamp(36px, 6vw, 58px); font-weight: 500; letter-spacing: .1em; }
+.roster-heading > p:last-child { color: #65747b; }
+.roster-guest, .roster-loading { padding: 38px; border: 1px solid rgba(95,129,152,.32); background: rgba(250,246,235,.84); color: #65747b; text-align: center; }
+.roster-guest strong { color: var(--ink-deep); font-size: 22px; }
+.roster-guest p { margin: 8px 0 20px; }
+.roster-guest a { display: inline-block; padding: 12px 18px; border: 1px solid var(--ink-deep); color: var(--ink-deep); font-size: 12px; font-weight: 700; letter-spacing: .1em; }
+.roster-content { display: grid; gap: 26px; }
+.officer-grid, .enlisted-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+.roster-group-title { grid-column: 1 / -1; margin: 8px 0 2px; color: var(--red); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+.roster-officer { display: grid; min-height: 250px; padding: 22px; grid-template-columns: 42% 1fr; gap: 20px; align-items: center; border: 1px solid rgba(95,129,152,.34); background: rgba(250,246,235,.88); box-shadow: 0 18px 42px rgba(35,58,70,.09); }
+.roster-officer__portrait { display: grid; aspect-ratio: 4 / 5; place-items: center; overflow: hidden; border: 1px solid rgba(95,129,152,.3); background: rgba(95,129,152,.08); }
+.roster-officer__portrait img { width: 100%; height: 100%; object-fit: cover; }
+.roster-officer__monogram { color: rgba(43,75,95,.58); font-family: Georgia,serif; font-size: 64px; }
+.roster-officer h3 { margin: 4px 0 8px; overflow-wrap: anywhere; color: var(--ink-deep); font-family: Georgia,"Times New Roman",serif; font-size: clamp(20px,2.2vw,28px); font-weight: 500; }
+.roster-rank { color: var(--red); font-size: 11px; font-weight: 700; letter-spacing: .13em; }
+.roster-status { color: #718087; font-size: 13px; }
+.ribbon-rack { display: flex; min-height: 32px; margin-top: 18px; flex-wrap: wrap; align-content: flex-start; gap: 3px; }
+.ribbon { width: 30px; height: 10px; border: 1px solid rgba(35,58,70,.18); background: repeating-linear-gradient(90deg,#a92f35 0 6px,#e1c16c 6px 10px,#314e68 10px 15px); box-shadow: 0 1px 2px rgba(35,58,70,.16); }
+.ribbon--2 { background: repeating-linear-gradient(90deg,#244f78 0 5px,#f5ecd4 5px 9px,#244f78 9px 14px); }
+.ribbon--3 { background: repeating-linear-gradient(90deg,#657647 0 7px,#d5b660 7px 11px,#8b3433 11px 15px); }
+.ribbon--4 { background: repeating-linear-gradient(90deg,#8a3231 0 4px,#f0e7cb 4px 8px,#8a3231 8px 12px); }
+.ribbon--5 { background: repeating-linear-gradient(90deg,#1f486d 0 7px,#c59742 7px 10px,#f0e7cb 10px 14px); }
+.ribbon-rack__empty { color: #8a9498; font-size: 11px; }
+.roster-enlisted { display: flex; min-height: 74px; padding: 16px 18px; align-items: center; justify-content: space-between; gap: 14px; border-left: 3px solid rgba(95,129,152,.7); background: rgba(250,246,235,.76); }
+.roster-enlisted__rank { color: var(--red); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+.roster-enlisted strong { color: var(--ink-deep); font-family: Georgia,"Times New Roman",serif; font-size: 18px; font-weight: 500; text-align: right; }
+.roster-empty { grid-column: 1 / -1; padding: 28px; background: rgba(250,246,235,.72); color: #78858a; text-align: center; }
+.guestbook { margin-top: 52px; padding: 34px; border: 1px solid rgba(95,129,152,.32); background: rgba(250,246,235,.78); }
+.guestbook > header { text-align: center; }
+.guestbook h3 { margin-top: 4px; color: var(--ink-deep); font-size: 34px; font-weight: 500; letter-spacing: .1em; }
+.guestbook form { width: min(100%,760px); margin: 28px auto 34px; }
+.guestbook form label { display: block; margin-bottom: 7px; color: var(--ink-deep); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.guestbook textarea { width: 100%; padding: 14px; resize: vertical; border: 1px solid rgba(95,129,152,.4); border-radius: 0; background: rgba(255,253,247,.88); color: var(--ink-deep); font: inherit; }
+.guestbook form > div { display: flex; min-height: 42px; margin-top: 10px; align-items: center; justify-content: space-between; gap: 12px; }
+.guestbook form [data-guestbook-status] { color: #68713f; font-size: 12px; }
+.guestbook form button { min-height: 40px; padding: 0 18px; border: 1px solid var(--ink-deep); background: var(--ink-deep); color: var(--paper-light); cursor: pointer; font-weight: 700; }
+.guestbook-list { display: grid; gap: 10px; }
+.guestbook-entry { position: relative; padding: 18px 78px 18px 20px; border-left: 3px solid rgba(95,129,152,.62); background: rgba(255,253,247,.72); }
+.guestbook-entry header { display: flex; margin-bottom: 8px; justify-content: space-between; gap: 16px; }
+.guestbook-entry strong { color: var(--ink-deep); font-family: Georgia,"Times New Roman",serif; font-weight: 500; }
+.guestbook-entry time { color: #849095; font-size: 11px; }
+.guestbook-entry > p { color: #52656e; white-space: pre-wrap; }
+.guestbook-delete { position: absolute; top: 50%; right: 16px; border: 0; background: transparent; color: var(--red); cursor: pointer; font-size: 12px; transform: translateY(-50%); }
+
 .native-sheet { position:relative; width:min(calc(100% - 32px),1080px); margin:auto; padding:86px 11% 92px; overflow:hidden; background:transparent; isolation:isolate; }
 .native-sheet::before { position:absolute; inset:0; z-index:-1; background:center / 100% 100% no-repeat; content:""; pointer-events:none; }
 .native-sheet--rules::before { background-image:url("../assets/content/rules-frame.png"); }
@@ -115,6 +161,8 @@
     .company-profile { padding:32px 24px; grid-template-columns:1fr; gap:28px; text-align:center; }
     .company-profile img { width:210px; margin:auto; }
     .company-facts { grid-template-columns:1fr; }
+    .officer-grid { grid-template-columns:1fr; }
+    .enlisted-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .native-sheet { padding:58px 32px 64px; }
     .honor-tree,.sponsor-grid { grid-template-columns:1fr; }
     .honor-card,.honor-card--wide { width:100%; grid-column:auto; }
@@ -137,4 +185,8 @@
     .rank-card__content { padding:32px 12px 22px 4px; text-align:left; }
     .rank-card__requirements { justify-content:flex-start; }
     .rank-special { padding:28px 12px; }
+    .roster-shell { width:calc(100% - 20px); margin-top:54px; }
+    .enlisted-grid { grid-template-columns:1fr; }
+    .guestbook { padding:26px 16px; }
+    .guestbook-entry { padding-right:62px; }
 }
