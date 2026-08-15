@@ -14,15 +14,91 @@ const companyOtherField = document.querySelector('#company-other-field');
 const companyOtherInput = memberForm.elements['company-other'];
 const rankSelect = memberForm.elements['current-rank'];
 const unsavedDialog = document.querySelector('#unsaved-changes-dialog');
+const achievementSelection = document.querySelector('#achievement-selection');
+const achievementAdd = document.querySelector('#achievement-add');
+const achievementMenu = document.querySelector('#achievement-menu');
+
+const achievementCatalog = [
+    { name: '军团兵', image: '../assets/content/honor-legionnaire.png' },
+    { name: '骑士', image: '../assets/content/honor-medal.png' },
+    { name: '骑士长官', image: '../assets/content/honor-cross.png' },
+    { name: '宿营长官', image: '../assets/content/honor-staff.png' },
+    { name: '大队军事护民官', image: '../assets/content/honor-staff.png' },
+    { name: '参谋军事护民官', image: '../assets/content/honor-staff.png' },
+    { name: '军团总务长官', image: '../assets/content/honor-staff.png' },
+    { name: '都督', image: '../assets/content/honor-staff.png' }
+];
 
 let currentAdmin = null;
 let profiles = [];
 let records = new Map();
 let editorSnapshot = '';
 let editorCloseInProgress = false;
+let selectedAchievements = [];
 
 const statusLabels = { pending: '待审核', approved: '已通过', rejected: '已拒绝', suspended: '已停用' };
 const roleLabels = { member: '普通成员', admin: '管理员', super_admin: '主管理员' };
+
+const achievementImage = (name) => achievementCatalog.find((item) => item.name === name)?.image
+    ?? '../assets/content/honor-medal.png';
+
+const syncAchievementInput = () => {
+    memberForm.elements.achievements.value = selectedAchievements.join('，');
+};
+
+const renderAchievementSelection = () => {
+    achievementSelection.replaceChildren();
+    if (!selectedAchievements.length) {
+        const empty = document.createElement('span');
+        empty.className = 'achievement-selection__empty';
+        empty.textContent = '尚未添加勋表';
+        achievementSelection.append(empty);
+    }
+    selectedAchievements.forEach((name) => {
+        const chip = document.createElement('span');
+        chip.className = 'achievement-chip';
+        const image = document.createElement('img');
+        image.src = achievementImage(name);
+        image.alt = '';
+        const label = document.createElement('span');
+        label.textContent = name;
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'achievement-chip__remove';
+        remove.setAttribute('aria-label', `移除${name}`);
+        remove.textContent = '×';
+        remove.addEventListener('click', () => {
+            selectedAchievements = selectedAchievements.filter((item) => item !== name);
+            renderAchievementSelection();
+        });
+        chip.append(image, label, remove);
+        achievementSelection.append(chip);
+    });
+    syncAchievementInput();
+};
+
+const renderAchievementMenu = () => {
+    achievementMenu.replaceChildren();
+    achievementCatalog.forEach(({ name, image }) => {
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.className = 'achievement-option';
+        option.disabled = selectedAchievements.includes(name);
+        const icon = document.createElement('img');
+        icon.src = image;
+        icon.alt = '';
+        const label = document.createElement('span');
+        label.textContent = name;
+        option.append(icon, label);
+        option.addEventListener('click', () => {
+            if (!selectedAchievements.includes(name)) selectedAchievements.push(name);
+            renderAchievementSelection();
+            achievementMenu.hidden = true;
+            achievementAdd.setAttribute('aria-expanded', 'false');
+        });
+        achievementMenu.append(option);
+    });
+};
 
 const makeButton = (label, className, action) => {
     const button = document.createElement('button');
@@ -200,7 +276,11 @@ const openEditor = (profile) => {
     setField('training-points', record.training_points ?? 0);
     setField('command-points', record.command_points ?? 0);
     setField('service-points', record.service_points ?? 0);
-    setField('achievements', (record.achievements ?? []).join('，'));
+    selectedAchievements = [...(record.achievements ?? [])];
+    renderAchievementSelection();
+    renderAchievementMenu();
+    achievementMenu.hidden = true;
+    achievementAdd.setAttribute('aria-expanded', 'false');
     setField('admin-note', '');
     roleField.hidden = currentAdmin.role !== 'super_admin' || profile.id === currentAdmin.id;
     editorMessage.textContent = '';
@@ -233,10 +313,7 @@ const saveMemberChanges = async () => {
     };
     if (currentAdmin.role === 'super_admin') profileChanges.role = memberForm.elements.role.value;
 
-    const achievements = memberForm.elements.achievements.value
-        .split(/[，,]/)
-        .map((value) => value.trim())
-        .filter(Boolean);
+    const achievements = [...selectedAchievements];
     const memberChanges = {
         profile_id: profileId,
         company,
@@ -291,6 +368,11 @@ document.querySelectorAll('[data-editor-close]').forEach((button) => {
 });
 
 memberForm.addEventListener('submit', (event) => event.preventDefault());
+achievementAdd.addEventListener('click', () => {
+    renderAchievementMenu();
+    achievementMenu.hidden = !achievementMenu.hidden;
+    achievementAdd.setAttribute('aria-expanded', String(!achievementMenu.hidden));
+});
 editor.addEventListener('cancel', (event) => {
     event.preventDefault();
     requestEditorClose();

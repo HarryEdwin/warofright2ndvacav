@@ -35,6 +35,20 @@
 .member-form input[readonly] { color: #78858a; background: rgba(95, 129, 152, .07); }
 .member-form [hidden] { display: none; }
 .member-form__wide { grid-column: 1 / -1; }
+.achievement-field { display: grid; gap: 8px; }
+.achievement-field__label { color: var(--ink-deep); font-size: 12px; font-weight: 700; letter-spacing: .06em; }
+.achievement-selection { min-height: 72px; display: flex; flex-wrap: wrap; align-items: center; gap: 9px; padding: 10px; border: 1px solid rgba(95, 129, 152, .42); background: rgba(255, 253, 247, .72); }
+.achievement-selection__empty { padding: 0 4px; color: #78858a; font-size: 13px; }
+.achievement-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 50px; padding: 5px 6px 5px 8px; border: 1px solid rgba(27, 55, 74, .2); background: rgba(255, 255, 255, .78); }
+.achievement-chip img { width: 38px; height: 42px; object-fit: contain; }
+.achievement-chip__remove { width: 27px; height: 27px; border: 0; background: transparent; color: var(--red); cursor: pointer; font-size: 21px; line-height: 1; }
+.achievement-picker { position: relative; }
+.achievement-add { padding: 9px 13px; border: 1px solid rgba(95, 129, 152, .42); background: rgba(255, 253, 247, .9); color: var(--ink-deep); cursor: pointer; font: inherit; }
+.achievement-menu { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 8px; padding: 10px; border: 1px solid rgba(95, 129, 152, .42); background: #f8f3e7; box-shadow: 0 12px 28px rgba(29, 42, 48, .12); }
+.achievement-menu[hidden] { display: none; }
+.achievement-option { min-width: 0; display: grid; justify-items: center; gap: 5px; padding: 9px 5px; border: 1px solid rgba(27, 55, 74, .18); background: rgba(255, 255, 255, .72); color: var(--ink-deep); cursor: pointer; }
+.achievement-option img { width: 42px; height: 48px; object-fit: contain; }
+.achievement-option:disabled { cursor: default; opacity: .4; }
 .unsaved-dialog { width:min(520px,calc(100% - 24px)); padding:30px; border:1px solid rgba(95,129,152,.5); background:#f8f3e6; color:var(--ink-deep); box-shadow:0 24px 80px rgba(22,37,46,.32); }
 .unsaved-dialog::backdrop { background:rgba(18,29,35,.3); backdrop-filter:blur(2px); }
 .unsaved-dialog h2 { font-size:28px; font-weight:500; }
@@ -49,4 +63,5 @@
     .member-form { padding: 24px 18px; }
     .member-form__grid { grid-template-columns: 1fr; }
     .member-form__wide { grid-column: auto; }
+    .achievement-menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

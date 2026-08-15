@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="War of Right Community 管理员控制台">
     <title>管理员控制台｜War of Right Community</title>
-    <link rel="stylesheet" href="../css/admin.css?v=20260815-3">
+    <link rel="stylesheet" href="../css/admin.css?v=20260815-4">
     <script src="../js/vendor/supabase.js" defer></script>
     <script src="../js/supabase-config.js" defer></script>
-    <script src="../js/admin.js?v=20260815-3" defer></script>
+    <script src="../js/admin.js?v=20260815-4" defer></script>
     <script src="../js/script.js?v=20260815-1" defer></script>
 </head>
 <body class="account-page admin-page">
@@ -106,7 +106,15 @@
                 <label>训练度<input name="training-points" type="number" min="0" step="1"></label>
                 <label>指挥点<input name="command-points" type="number" min="0" step="1"></label>
                 <label>勤务点<input name="service-points" type="number" min="0" step="1"></label>
-                <label class="member-form__wide">已获得成就<input name="achievements" type="text" maxlength="500" placeholder="多个成就请用逗号分隔"></label>
+                <div class="member-form__wide achievement-field">
+                    <span class="achievement-field__label">荣誉勋表</span>
+                    <input name="achievements" type="hidden">
+                    <div id="achievement-selection" class="achievement-selection" aria-live="polite"></div>
+                    <div class="achievement-picker">
+                        <button id="achievement-add" class="achievement-add" type="button" aria-expanded="false">＋ 添加勋表</button>
+                        <div id="achievement-menu" class="achievement-menu" hidden></div>
+                    </div>
+                </div>
                 <label class="member-form__wide">新增管理员备注<textarea name="admin-note" maxlength="2000" rows="3" placeholder="仅管理员可见；留空则不新增"></textarea></label>
             </div>
             <p id="editor-message" class="account-message" role="status"></p>

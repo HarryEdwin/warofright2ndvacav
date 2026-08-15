@@ -1,27 +1,31 @@
 const companyClient = window.getWorSupabase();
 const companyName = document.body.dataset.company;
-const guestPanel = document.querySelector('[data-roster-guest]');
 const loadingPanel = document.querySelector('[data-roster-loading]');
 const rosterContent = document.querySelector('[data-roster-content]');
 const officerGrid = document.querySelector('[data-officer-grid]');
-const enlistedGrid = document.querySelector('[data-enlisted-grid]');
 const guestbook = document.querySelector('[data-guestbook]');
 const guestbookForm = document.querySelector('[data-guestbook-form]');
 const guestbookStatus = document.querySelector('[data-guestbook-status]');
 const guestbookList = document.querySelector('[data-guestbook-list]');
-const memberDetail = document.querySelector('[data-member-detail]');
-const memberDetailContent = document.querySelector('[data-member-detail-content]');
-const memberDetailClose = document.querySelector('[data-member-detail-close]');
 
-const officerRanks = new Set(['少尉', '中尉', '上尉']);
-const rankOrder = ['新兵', '列兵', '二等兵', '一等兵', '准下士', '下士', '马鞍军士', '中士', '勤务军士', '上士', '军需军士', '军士长', '参谋军士长', '随军牧师', '少尉', '中尉', '上尉'];
+const honorCatalog = {
+    '军团兵': '../assets/content/honor-legionnaire.png',
+    '骑士': '../assets/content/honor-medal.png',
+    '骑士长官': '../assets/content/honor-cross.png',
+    '宿营长官': '../assets/content/honor-staff.png',
+    '大队军事护民官': '../assets/content/honor-staff.png',
+    '参谋军事护民官': '../assets/content/honor-staff.png',
+    '军团总务长官': '../assets/content/honor-staff.png',
+    '都督': '../assets/content/honor-staff.png'
+};
+
 let viewer = null;
 let profileMap = new Map();
 
-const makeElement = (tag, className, text) => {
+const makeElement = (tag, className, value) => {
     const element = document.createElement(tag);
     if (className) element.className = className;
-    if (text !== undefined) element.textContent = text;
+    if (value !== undefined) element.textContent = value;
     return element;
 };
 
@@ -33,138 +37,53 @@ const signedAvatarUrl = async (path) => {
     return data?.signedUrl ?? null;
 };
 
-const detailValue = (label, value, formatter = String) => {
-    if (value === null || value === undefined || value === '') return null;
-    const wrapper = makeElement('div', 'member-detail__field');
-    wrapper.append(makeElement('dt', '', label), makeElement('dd', '', formatter(value)));
-    return wrapper;
-};
-
-const openMemberDetail = async (profile, record) => {
-    const isOfficer = officerRanks.has(record.current_rank);
-    const heading = makeElement('header', 'member-detail__heading');
-    if (isOfficer) {
-        const portrait = makeElement('div', 'member-detail__portrait');
-        const avatarUrl = await signedAvatarUrl(record.avatar_path);
-        if (avatarUrl) {
-            const image = document.createElement('img');
-            image.src = avatarUrl;
-            image.alt = `${profile.nickname}的头像`;
-            portrait.append(image);
-        } else {
-            portrait.append(makeElement('span', '', profile.nickname.slice(0, 1).toUpperCase()));
-        }
-        heading.append(portrait);
-    }
-    const identity = makeElement('div');
-    identity.append(
-        makeElement('p', 'eyebrow', 'Member Record'),
-        makeElement('h2', '', memberDisplayName(profile, record)),
-        makeElement('p', 'member-detail__rank', record.current_rank || '军衔未设置')
-    );
-    identity.querySelector('h2').id = 'member-detail-name';
-    heading.append(identity);
-
-    const fields = [
-        detailValue('所属连队', record.company),
-        detailValue('成员状态', record.member_status || '现役'),
-        detailValue('QQ 号', record.qq_number),
-        detailValue('晋升路线', record.promotion_path),
-        detailValue('入队日期', record.joined_on, (value) => formatDate(`${value}T00:00:00`)),
-        detailValue('活动总次数', record.activity_total, (value) => `${value} 次`),
-        detailValue('经验', record.experience_points),
-        detailValue('训练度', record.training_points),
-        detailValue('指挥点', record.command_points),
-        detailValue('勤务点', record.service_points),
-        detailValue('已获成就', record.achievements?.length ? record.achievements.join('、') : null)
-    ].filter(Boolean);
-    const details = makeElement('dl', 'member-detail__fields');
-    details.append(...fields);
-    memberDetailContent.replaceChildren(heading, details);
-    if (fields.length <= 2) {
-        memberDetailContent.append(makeElement('p', 'member-detail__private', '该成员暂未公开更多资料。'));
-    }
-    memberDetail.showModal();
-};
-
-memberDetailClose.addEventListener('click', () => memberDetail.close());
-memberDetail.addEventListener('click', (event) => {
-    if (event.target === memberDetail) memberDetail.close();
-});
-
-const createOfficerCard = async ({ profile, record }) => {
-    const card = makeElement('button', 'roster-officer');
-    card.type = 'button';
-    card.setAttribute('aria-label', `查看${profile.nickname}的成员档案`);
+const createOfficerCard = async (record) => {
+    const card = makeElement('article', 'roster-officer');
     const portrait = makeElement('div', 'roster-officer__portrait');
     const avatarUrl = await signedAvatarUrl(record.avatar_path);
     if (avatarUrl) {
         const image = document.createElement('img');
         image.src = avatarUrl;
-        image.alt = `${profile.nickname}的头像`;
+        image.alt = `${record.nickname}的头像`;
         portrait.append(image);
     } else {
-        portrait.append(makeElement('span', 'roster-officer__monogram', profile.nickname.slice(0, 1).toUpperCase()));
+        portrait.append(makeElement('span', 'roster-officer__monogram', record.nickname.slice(0, 1).toUpperCase()));
     }
+
     const content = makeElement('div', 'roster-officer__content');
-    content.append(
-        makeElement('p', 'roster-rank', record.current_rank || '军衔未设置'),
-        makeElement('h3', '', memberDisplayName(profile, record)),
-        makeElement('p', 'roster-status', record.member_status || '现役')
-    );
-    const ribbons = makeElement('div', 'ribbon-rack');
-    ribbons.setAttribute('aria-label', '荣誉勋表');
-    const achievements = record.achievements ?? [];
-    if (achievements.length) {
-        achievements.forEach((achievement, index) => {
-            const ribbon = makeElement('span', `ribbon ribbon--${(index % 5) + 1}`);
-            ribbon.title = achievement;
-            ribbons.append(ribbon);
-        });
-    } else {
-        ribbons.append(makeElement('span', 'ribbon-rack__empty', '暂无勋表'));
-    }
-    content.append(ribbons);
+    content.append(makeElement('h3', '', memberDisplayName(record, record)));
+    const honors = makeElement('div', 'officer-honors');
+    honors.setAttribute('aria-label', '荣誉勋表');
+    (record.achievements ?? []).forEach((achievement) => {
+        const item = makeElement('figure', 'officer-honor');
+        const image = document.createElement('img');
+        image.src = honorCatalog[achievement] ?? '../assets/content/honor-medal.png';
+        image.alt = achievement;
+        image.title = achievement;
+        item.append(image, makeElement('figcaption', '', achievement));
+        honors.append(item);
+    });
+    if (!honors.childElementCount) honors.append(makeElement('span', 'officer-honors__empty', '暂无勋表'));
+    content.append(honors);
     card.append(portrait, content);
-    card.addEventListener('click', () => openMemberDetail(profile, record));
     return card;
 };
 
-const createEnlistedCard = ({ profile, record }) => {
-    const card = makeElement('button', 'roster-enlisted');
-    card.type = 'button';
-    card.setAttribute('aria-label', `查看${profile.nickname}的成员档案`);
-    card.append(
-        makeElement('span', 'roster-enlisted__rank', record.current_rank || '军衔未设置'),
-        makeElement('strong', '', memberDisplayName(profile, record))
-    );
-    card.addEventListener('click', () => openMemberDetail(profile, record));
-    return card;
-};
-
-const renderRoster = async (profiles, records) => {
-    const members = records
-        .filter((record) => record.company === companyName && profileMap.has(record.profile_id))
-        .map((record) => ({ profile: profileMap.get(record.profile_id), record }))
-        .sort((a, b) => rankOrder.indexOf(b.record.current_rank) - rankOrder.indexOf(a.record.current_rank)
-            || a.profile.nickname.localeCompare(b.profile.nickname, 'zh-CN'));
-    const officers = members.filter(({ record }) => officerRanks.has(record.current_rank));
-    const enlisted = members.filter(({ record }) => !officerRanks.has(record.current_rank));
-
+const loadPublicOfficers = async () => {
+    const { data: officers, error } = await companyClient.rpc('get_public_company_officers', { p_company: companyName });
+    if (error) {
+        loadingPanel.textContent = '军官席暂时无法读取，请确认已执行最新数据库更新。';
+        return;
+    }
     officerGrid.replaceChildren();
-    enlistedGrid.replaceChildren();
-    if (officers.length) {
-        officerGrid.append(makeElement('h3', 'roster-group-title', '军官席'));
+    if (officers?.length) {
         const cards = await Promise.all(officers.map(createOfficerCard));
         officerGrid.append(...cards);
+    } else {
+        officerGrid.append(makeElement('p', 'roster-empty', `${companyName} 暂未设置现任军官。`));
     }
-    if (enlisted.length) {
-        enlistedGrid.append(makeElement('h3', 'roster-group-title', '士兵名册'));
-        enlistedGrid.append(...enlisted.map(createEnlistedCard));
-    }
-    if (!members.length) {
-        enlistedGrid.append(makeElement('p', 'roster-empty', `目前尚未编入 ${companyName} 的成员。`));
-    }
+    loadingPanel.hidden = true;
+    rosterContent.hidden = false;
 };
 
 const formatDate = (value) => new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(value));
@@ -215,6 +134,7 @@ const loadMessages = async () => {
 
 guestbookForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+    if (!viewer) return;
     const textarea = guestbookForm.elements.message;
     const message = textarea.value.trim();
     if (!message) return;
@@ -232,7 +152,7 @@ guestbookForm.addEventListener('submit', async (event) => {
     await loadMessages();
 });
 
-const initializeCompany = async () => {
+const loadMemberGuestbook = async () => {
     const { data: { session } } = await companyClient.auth.getSession();
     if (!session?.user) return;
     const { data: currentProfile } = await companyClient.from('profiles')
@@ -242,29 +162,21 @@ const initializeCompany = async () => {
     if (!currentProfile || currentProfile.account_status !== 'approved') return;
 
     viewer = currentProfile;
-    guestPanel.hidden = true;
-    loadingPanel.hidden = false;
-    const { data: rosterRows, error: rosterError } = await companyClient.rpc('get_company_roster');
-    if (rosterError) {
-        loadingPanel.textContent = '花名册暂时无法读取，请确认已执行最新数据库更新。';
-        return;
-    }
-    const records = rosterRows ?? [];
-    profileMap = new Map(records.map((record) => [record.profile_id, {
+    const { data: records, error } = await companyClient.rpc('get_company_roster');
+    if (error) return;
+    profileMap = new Map((records ?? []).map((record) => [record.profile_id, {
         id: record.profile_id,
         nickname: record.nickname,
         role: record.member_role,
         memberRecord: record
     }]));
-    records.forEach((record) => {
-        const profile = profileMap.get(record.profile_id);
-        if (profile) profile.memberRecord = record;
-    });
-    await renderRoster([...profileMap.values()], records);
-    loadingPanel.hidden = true;
-    rosterContent.hidden = false;
     guestbook.hidden = false;
     await loadMessages();
+};
+
+const initializeCompany = async () => {
+    await loadPublicOfficers();
+    await loadMemberGuestbook();
 };
 
 initializeCompany();
