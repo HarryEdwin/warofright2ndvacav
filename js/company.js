@@ -18,9 +18,11 @@ const honorCatalog = {
     '军团总务长官': '../assets/content/honor-staff.png',
     '都督': '../assets/content/honor-staff.png'
 };
+const commandRankWeight = { '上尉': 3, '中尉': 2, '少尉': 1 };
 
 let viewer = null;
 let profileMap = new Map();
+const avatarUrlCache = new Map();
 
 const makeElement = (tag, className, value) => {
     const element = document.createElement(tag);
@@ -33,8 +35,11 @@ const memberDisplayName = (profile, record) => window.formatWorMemberName?.(prof
 
 const signedAvatarUrl = async (path) => {
     if (!path) return null;
+    if (avatarUrlCache.has(path)) return avatarUrlCache.get(path);
     const { data } = await companyClient.storage.from('member-avatars').createSignedUrl(path, 3600);
-    return data?.signedUrl ?? null;
+    const url = data?.signedUrl ?? null;
+    avatarUrlCache.set(path, url);
+    return url;
 };
 
 const createOfficerCard = async (record) => {
@@ -72,15 +77,22 @@ const createOfficerCard = async (record) => {
 const loadPublicOfficers = async () => {
     const { data: officers, error } = await companyClient.rpc('get_public_company_officers', { p_company: companyName });
     if (error) {
-        loadingPanel.textContent = '军官席暂时无法读取，请确认已执行最新数据库更新。';
+        loadingPanel.textContent = '指挥官名单暂时无法读取，请稍后重试。';
         return;
     }
     officerGrid.replaceChildren();
     if (officers?.length) {
-        const cards = await Promise.all(officers.map(createOfficerCard));
-        officerGrid.append(...cards);
+        const ranks = [...new Set(officers.map((officer) => officer.current_rank))]
+            .sort((a, b) => (commandRankWeight[b] ?? 0) - (commandRankWeight[a] ?? 0));
+        for (const rank of ranks) {
+            const rowOfficers = officers.filter((officer) => officer.current_rank === rank);
+            const row = makeElement('div', 'officer-rank-row');
+            row.dataset.rank = rank;
+            row.append(...await Promise.all(rowOfficers.map(createOfficerCard)));
+            officerGrid.append(row);
+        }
     } else {
-        officerGrid.append(makeElement('p', 'roster-empty', `${companyName} 暂未设置现任军官。`));
+        officerGrid.append(makeElement('p', 'roster-empty', `${companyName} 暂未设置现任指挥官。`));
     }
     loadingPanel.hidden = true;
     rosterContent.hidden = false;
@@ -102,15 +114,24 @@ const loadMessages = async () => {
         guestbookList.replaceChildren(makeElement('p', 'roster-empty', '还没有留言，来写下第一条吧。'));
         return;
     }
-    guestbookList.replaceChildren(...messages.map((message) => {
+    const entries = await Promise.all(messages.map(async (message) => {
         const author = profileMap.get(message.author_id);
         const record = author?.memberRecord ?? {};
         const item = makeElement('article', 'guestbook-entry');
         const header = makeElement('header');
-        header.append(
-            makeElement('strong', '', author ? memberDisplayName(author, record) : '已离队成员'),
-            makeElement('time', '', formatDate(message.created_at))
-        );
+        const authorBlock = makeElement('div', 'guestbook-entry__author');
+        const avatar = makeElement('div', 'guestbook-entry__avatar');
+        const avatarUrl = await signedAvatarUrl(record.avatar_path);
+        if (avatarUrl) {
+            const image = document.createElement('img');
+            image.src = avatarUrl;
+            image.alt = author ? `${author.nickname}的头像` : '';
+            avatar.append(image);
+        } else {
+            avatar.textContent = author?.nickname?.slice(0, 1).toUpperCase() || '—';
+        }
+        authorBlock.append(avatar, makeElement('strong', '', author ? memberDisplayName(author, record) : '已离队成员'));
+        header.append(authorBlock, makeElement('time', '', formatDate(message.created_at)));
         item.append(header, makeElement('p', '', message.message));
         if (['admin', 'super_admin'].includes(viewer.role)) {
             const deleteButton = makeElement('button', 'guestbook-delete', '删除');
@@ -130,6 +151,7 @@ const loadMessages = async () => {
         }
         return item;
     }));
+    guestbookList.replaceChildren(...entries);
 };
 
 guestbookForm.addEventListener('submit', async (event) => {

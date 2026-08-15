@@ -35,9 +35,20 @@ let records = new Map();
 let editorSnapshot = '';
 let editorCloseInProgress = false;
 let selectedAchievements = [];
+const avatarUrlCache = new Map();
 
 const statusLabels = { pending: '待审核', approved: '已通过', rejected: '已拒绝', suspended: '已停用' };
 const roleLabels = { member: '普通成员', admin: '管理员', super_admin: '主管理员' };
+
+const getAvatarUrl = async (profileId) => {
+    const path = records.get(profileId)?.avatar_path;
+    if (!path) return null;
+    if (avatarUrlCache.has(path)) return avatarUrlCache.get(path);
+    const { data } = await client.storage.from('member-avatars').createSignedUrl(path, 3600);
+    const url = data?.signedUrl ?? null;
+    avatarUrlCache.set(path, url);
+    return url;
+};
 
 const achievementImage = (name) => achievementCatalog.find((item) => item.name === name)?.image
     ?? '../assets/content/honor-medal.png';
@@ -159,10 +170,22 @@ const deleteMemberAvatar = async (profile) => {
     await loadMembers();
 };
 
-const makeMemberCard = (profile, includeReviewActions = false) => {
+const makeMemberCard = async (profile, includeReviewActions = false) => {
     const card = document.createElement('article');
     card.className = 'member-admin-card';
+    const avatar = document.createElement('div');
+    avatar.className = 'member-admin-card__avatar';
+    const avatarUrl = await getAvatarUrl(profile.id);
+    if (avatarUrl) {
+        const image = document.createElement('img');
+        image.src = avatarUrl;
+        image.alt = `${profile.nickname}的头像`;
+        avatar.append(image);
+    } else {
+        avatar.textContent = profile.nickname.slice(0, 1).toUpperCase();
+    }
     const identity = document.createElement('div');
+    identity.className = 'member-admin-card__identity';
     const nickname = document.createElement('h3');
     const meta = document.createElement('p');
     nickname.textContent = profile.nickname;
@@ -187,16 +210,19 @@ const makeMemberCard = (profile, includeReviewActions = false) => {
     if (currentAdmin.role === 'super_admin' && profile.id !== currentAdmin.id) {
         actions.append(makeButton('删除账户', 'admin-button admin-button--danger', () => deleteMember(profile)));
     }
-    card.append(identity, actions);
+    const memberInfo = document.createElement('div');
+    memberInfo.className = 'member-admin-card__info';
+    memberInfo.append(avatar, identity);
+    card.append(memberInfo, actions);
     return card;
 };
 
-const renderMembers = () => {
+const renderMembers = async () => {
     const pending = profiles.filter((profile) => profile.account_status === 'pending');
-    if (pending.length) pendingList.replaceChildren(...pending.map((profile) => makeMemberCard(profile, true)));
+    if (pending.length) pendingList.replaceChildren(...await Promise.all(pending.map((profile) => makeMemberCard(profile, true))));
     else renderEmpty(pendingList, '目前没有待审核申请。');
 
-    if (profiles.length) memberList.replaceChildren(...profiles.map((profile) => makeMemberCard(profile)));
+    if (profiles.length) memberList.replaceChildren(...await Promise.all(profiles.map((profile) => makeMemberCard(profile))));
     else renderEmpty(memberList, '还没有账户记录。');
 };
 
@@ -215,7 +241,8 @@ const loadMembers = async () => {
     }
     profiles = profileRows ?? [];
     records = new Map((recordRows ?? []).map((record) => [record.profile_id, record]));
-    renderMembers();
+    avatarUrlCache.clear();
+    await renderMembers();
 };
 
 const setField = (name, value = '') => { memberForm.elements[name].value = value ?? ''; };

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="弗吉尼亚第二骑兵团团部网站，提供民权战争活动指南、军衔规则、成就与连队信息">
     <title>弗吉尼亚第二骑兵团｜民权战争</title>
-    <link rel="stylesheet" href="./css/main.css?v=20260815-5">
+    <link rel="stylesheet" href="./css/main.css?v=20260815-6">
 </head>
 <body>
     <header class="site-header">
@@ -16,7 +16,14 @@
         <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">目录</button>
         <nav id="site-nav" class="site-nav" aria-label="主要导航">
             <a href="#guide">指南</a>
-            <a href="#companies">连队</a>
+            <details class="nav-dropdown">
+                <summary>连队</summary>
+                <div class="nav-dropdown__menu">
+                    <a href="./pages/company-a.html">A 连</a>
+                    <a href="./pages/company-sc.html">SC 连</a>
+                    <a class="nav-dropdown__members" href="./pages/members.html">成员列表</a>
+                </div>
+            </details>
             <a href="#about">关于</a>
             <a href="./pages/account.html" data-account-link aria-label="登录或申请账户">账户</a>
         </nav>
@@ -119,6 +126,6 @@
         <p>Virescit Vulnere Virtus</p>
         <p>© 2026 民权战争活动社区</p>
     </footer>
-    <script src="./js/script.js?v=20260815-1"></script>
+    <script src="./js/script.js?v=20260815-2"></script>
 </body>
 </html>

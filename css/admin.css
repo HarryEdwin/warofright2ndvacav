@@ -12,6 +12,10 @@
 .member-list { display: grid; gap: 12px; }
 .member-list__empty { padding: 28px; background: rgba(255, 253, 247, .66); color: #78858a; text-align: center; }
 .member-admin-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 20px 22px; border-left: 3px solid var(--ink); background: rgba(255, 253, 247, .75); }
+.member-admin-card__info { display: flex; min-width: 0; align-items: center; gap: 14px; }
+.member-admin-card__avatar { display: grid; width: 48px; height: 48px; flex: 0 0 48px; place-items: center; overflow: hidden; border: 2px solid rgba(95,129,152,.27); border-radius: 50%; background: rgba(95,129,152,.1); color: rgba(43,75,95,.64); font-family: Georgia,serif; font-size: 20px; }
+.member-admin-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.member-admin-card__identity { min-width: 0; }
 .member-admin-card h3 { color: var(--ink-deep); font-size: 20px; font-weight: 600; }
 .member-admin-card p { margin-top: 5px; color: #718087; font-size: 13px; }
 .member-admin-card__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
@@ -59,6 +63,7 @@
     .admin-main { width: min(100% - 20px, 1180px); padding-top: 38px; }
     .admin-section { padding: 22px 16px; }
     .member-admin-card { align-items: stretch; flex-direction: column; }
+    .member-admin-card__info { align-items: center; }
     .member-admin-card__actions { justify-content: flex-start; }
     .member-form { padding: 24px 18px; }
     .member-form__grid { grid-template-columns: 1fr; }

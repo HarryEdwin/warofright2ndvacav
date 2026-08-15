@@ -7,7 +7,8 @@ menuButton?.addEventListener('click', () => {
 });
 
 siteNav?.addEventListener('click', (event) => {
-    if (event.target.matches('a')) {
+    if (event.target.closest('a')) {
+        siteNav.querySelectorAll('.nav-dropdown[open]').forEach((dropdown) => dropdown.removeAttribute('open'));
         siteNav.classList.remove('is-open');
         menuButton?.setAttribute('aria-expanded', 'false');
     }
