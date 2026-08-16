@@ -25,7 +25,16 @@
                 </div>
             </details>
             <a href="#about">关于</a>
-            <a class="nav-forum-link" href="./pages/forum.html" data-forum-link>论坛</a>
+            <details class="nav-dropdown nav-dropdown--forum" data-forum-link>
+                <summary>论坛</summary>
+                <div class="nav-dropdown__menu">
+                    <a href="./pages/forum.html">论坛首页</a>
+                    <a href="./pages/forum.html?category=announcements">团部公告</a>
+                    <a href="./pages/forum.html?category=events">活动安排</a>
+                    <a href="./pages/forum.html?category=tactics">战术讨论</a>
+                    <a href="./pages/forum.html?category=chat">成员交流</a>
+                </div>
+            </details>
             <a href="./pages/account.html" data-account-link aria-label="登录或申请账户">账户</a>
         </nav>
     </header>

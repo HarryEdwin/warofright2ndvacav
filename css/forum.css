@@ -28,14 +28,16 @@ body { min-height: 100vh; }
 .post-card { position: relative; display: grid; width: 100%; padding: 20px 18px; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 16px; align-items: center; border: 1px solid rgba(95,129,152,.21); background: rgba(255,253,247,.7); color: inherit; cursor: pointer; text-align: left; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
 .post-card:hover { border-color: rgba(186,62,53,.45); box-shadow: 0 10px 24px rgba(29,52,66,.08); transform: translateY(-2px); }
 .post-card.is-pinned { border-left: 3px solid var(--red); }
+.post-card__content { display: block; min-width: 0; max-width: 100%; overflow: hidden; }
 .forum-avatar { display: grid; width: 48px; height: 48px; place-items: center; overflow: hidden; border: 1px solid rgba(95,129,152,.3); border-radius: 50%; background: #efeee7; color: #87949a; font-size: 20px; }
 .forum-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .post-card__badges { display: flex; margin-bottom: 4px; gap: 6px; flex-wrap: wrap; }
 .forum-badge { padding: 2px 7px; border: 1px solid rgba(95,129,152,.25); color: #68777e; font-size: 9px; font-weight: 700; letter-spacing: .1em; }
 .forum-badge--pin { border-color: rgba(186,62,53,.35); color: var(--red); }
-.post-card h3 { overflow: hidden; color: var(--ink-deep); font-size: 18px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.post-card__excerpt { overflow: hidden; margin: 3px 0 7px; color: #69767c; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.post-card h3 { display: block; max-width: 100%; overflow: hidden; color: var(--ink-deep); font-size: 18px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.post-card__excerpt { display: block; max-width: 100%; overflow: hidden; margin: 3px 0 7px; color: #69767c; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
 .post-card__meta, .thread-meta { color: #89949a; font-size: 11px; }
+.post-card__meta { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .post-card__count { color: #65747b; font-size: 12px; white-space: nowrap; }
 
 .forum-button { display: inline-flex; min-height: 40px; padding: 9px 18px; align-items: center; justify-content: center; border: 1px solid rgba(37,65,84,.5); background: rgba(250,247,238,.8); color: var(--ink); cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; letter-spacing: .1em; }

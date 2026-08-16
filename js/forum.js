@@ -30,6 +30,15 @@ const postForm = document.querySelector('#post-form');
 const commentForm = document.querySelector('#comment-form');
 const reportForm = document.querySelector('#report-form');
 
+const requestedCategory = new URLSearchParams(window.location.search).get('category');
+if (Object.hasOwn(categoryLabels, requestedCategory)) {
+    forumState.category = requestedCategory;
+    document.querySelectorAll('[data-category]').forEach((button) => {
+        button.classList.toggle('is-active', button.dataset.category === requestedCategory);
+    });
+    document.querySelector('#feed-title').textContent = categoryLabels[requestedCategory];
+}
+
 const makeElement = (tag, className, text) => {
     const element = document.createElement(tag);
     if (className) element.className = className;
