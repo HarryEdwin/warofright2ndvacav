@@ -24,11 +24,11 @@ body { min-height: 100vh; }
 .forum-feed__heading { display: flex; margin-bottom: 18px; align-items: end; justify-content: space-between; border-bottom: 1px solid rgba(95,129,152,.22); padding-bottom: 18px; }
 .forum-feed__heading h2 { color: var(--ink-deep); font-size: 28px; font-weight: 500; letter-spacing: .08em; }
 .forum-status { padding: 34px 12px; color: #7a878d; overflow-wrap: anywhere; text-align: center; }
-.post-list { display: grid; gap: 10px; }
-.post-card { position: relative; display: grid; width: 100%; padding: 20px 18px; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 16px; align-items: center; border: 1px solid rgba(95,129,152,.21); background: rgba(255,253,247,.7); color: inherit; cursor: pointer; text-align: left; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.post-list { display: grid; min-width: 0; gap: 10px; }
+.post-card { position: relative; display: grid; width: 100%; min-width: 0; max-width: 100%; padding: 20px 18px; grid-template-columns: 52px minmax(0, 1fr) 64px; gap: 16px; align-items: center; overflow: hidden; border: 1px solid rgba(95,129,152,.21); background: rgba(255,253,247,.7); color: inherit; cursor: pointer; text-align: left; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
 .post-card:hover { border-color: rgba(186,62,53,.45); box-shadow: 0 10px 24px rgba(29,52,66,.08); transform: translateY(-2px); }
 .post-card.is-pinned { border-left: 3px solid var(--red); }
-.post-card__content { display: block; min-width: 0; max-width: 100%; overflow: hidden; }
+.post-card__content { display: block; width: 100%; min-width: 0; max-width: 100%; overflow: hidden; }
 .forum-avatar { display: grid; width: 48px; height: 48px; place-items: center; overflow: hidden; border: 1px solid rgba(95,129,152,.3); border-radius: 50%; background: #efeee7; color: #87949a; font-size: 20px; }
 .forum-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .post-card__badges { display: flex; margin-bottom: 4px; gap: 6px; flex-wrap: wrap; }
@@ -38,7 +38,7 @@ body { min-height: 100vh; }
 .post-card__excerpt { display: block; max-width: 100%; overflow: hidden; margin: 3px 0 7px; color: #69767c; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
 .post-card__meta, .thread-meta { color: #89949a; font-size: 11px; }
 .post-card__meta { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.post-card__count { color: #65747b; font-size: 12px; white-space: nowrap; }
+.post-card__count { width: 64px; overflow: hidden; color: #65747b; font-size: 12px; justify-self: end; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
 
 .forum-button { display: inline-flex; min-height: 40px; padding: 9px 18px; align-items: center; justify-content: center; border: 1px solid rgba(37,65,84,.5); background: rgba(250,247,238,.8); color: var(--ink); cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; letter-spacing: .1em; }
 .forum-button:hover { border-color: var(--red); color: var(--red); }
@@ -102,7 +102,7 @@ body { min-height: 100vh; }
     .forum-feed { padding: 18px 14px; }
     .post-card { padding: 15px 12px; grid-template-columns: 42px minmax(0, 1fr); gap: 11px; }
     .post-card .forum-avatar { width: 40px; height: 40px; }
-    .post-card__count { grid-column: 2; }
+    .post-card__count { width: 100%; grid-column: 2; justify-self: stretch; text-align: left; }
     .forum-hero__actions { align-items: stretch; flex-direction: column; }
     .forum-dialog form, .forum-dialog > article { padding: 20px 16px; }
     .thread-dialog__top { align-items: flex-start; gap: 12px; }
