@@ -45,6 +45,7 @@
 .company-facts strong { display: block; color: var(--red); font-size: 11px; letter-spacing: .14em; }
 .company-facts span { color: var(--ink); }
 .company-recruit { display:flex; margin-top:28px; padding:28px 32px; align-items:center; justify-content:space-between; gap:28px; border-left:3px solid var(--red); background:rgba(250,246,235,.78); }
+.company-recruit[hidden] { display:none; }
 .company-recruit p { max-width:620px; color:#61737c; font-size:14px; }
 .company-recruit a { display:inline-flex; min-height:48px; padding:0 22px; flex:0 0 auto; align-items:center; gap:14px; border:1px solid var(--ink-deep); background:var(--ink-deep); color:var(--paper-light); font-size:13px; font-weight:700; letter-spacing:.1em; transition:background .22s ease,color .22s ease,transform .22s ease; }
 .company-recruit a:hover,.company-recruit a:focus-visible { background:transparent; color:var(--ink-deep); transform:translateY(-2px); }
@@ -63,7 +64,7 @@
 .roster-officer__monogram { color: rgba(43,75,95,.58); font-family: Georgia,serif; font-size: 64px; }
 .roster-officer h3 { margin: 4px 0 8px; overflow-wrap: anywhere; color: var(--ink-deep); font-family: Georgia,"Times New Roman",serif; font-size: clamp(20px,2.2vw,28px); font-weight: 500; }
 .officer-honors { display:grid; margin-top:16px; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-.officer-honor { min-width:0; text-align:center; }
+.officer-honor { min-width:0; margin:0; text-align:center; }
 .officer-honor img { width:54px; height:62px; margin:auto; object-fit:contain; filter:drop-shadow(0 5px 5px rgba(67,57,15,.16)); }
 .officer-honor figcaption { margin-top:3px; overflow:hidden; color:#73776c; font-size:9px; line-height:1.25; text-overflow:ellipsis; white-space:nowrap; }
 .officer-honors__empty { grid-column:1/-1; color:#8a9498; font-size:11px; }

@@ -7,6 +7,7 @@ const guestbook = document.querySelector('[data-guestbook]');
 const guestbookForm = document.querySelector('[data-guestbook-form]');
 const guestbookStatus = document.querySelector('[data-guestbook-status]');
 const guestbookList = document.querySelector('[data-guestbook-list]');
+const recruitmentPanel = document.querySelector('.company-recruit');
 
 const honorCatalog = {
     '军团兵': '../assets/content/honor-legionnaire.png',
@@ -198,6 +199,7 @@ guestbookForm.addEventListener('submit', async (event) => {
 const loadMemberGuestbook = async () => {
     const { data: { session } } = await companyClient.auth.getSession();
     if (!session?.user) return;
+    if (recruitmentPanel) recruitmentPanel.hidden = true;
     const { data: currentProfile } = await companyClient.from('profiles')
         .select('id, nickname, account_status, role')
         .eq('id', session.user.id)
