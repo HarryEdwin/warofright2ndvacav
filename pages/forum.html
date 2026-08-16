@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="弗吉尼亚第二骑兵团团部论坛，发布公告、活动安排、战术讨论与成员交流">
+    <title>团部论坛｜弗吉尼亚第二骑兵团</title>
+    <link rel="stylesheet" href="../css/forum.css?v=20260815-3">
+    <script src="../js/vendor/supabase.js" defer></script>
+    <script src="../js/supabase-config.js" defer></script>
+    <script src="../js/script.js?v=20260815-3" defer></script>
+    <script src="../js/forum.js?v=20260815-1" defer></script>
+</head>
+<body>
+    <header class="detail-header">
+        <a class="detail-header__brand" href="../index.html"><img src="../assets/reference/image3.webp" alt="狼徽"><span>弗吉尼亚第二骑兵团</span></a>
+        <nav><a href="../index.html">首页</a><a href="members.html">成员列表</a><a class="nav-forum-link" href="forum.html" data-forum-link aria-current="page">论坛</a><a href="account.html" data-account-link>账户</a></nav>
+    </header>
+
+    <main class="forum-main">
+        <header class="forum-hero">
+            <p class="eyebrow">Regimental Forum</p>
+            <h1>团部论坛</h1>
+            <p>公告、活动、战术与日常交流。所有人均可阅读，审核通过的成员可以参与讨论。</p>
+            <div class="forum-hero__actions">
+                <button id="new-post-button" class="forum-button forum-button--primary" type="button" hidden>＋ 发布主题</button>
+                <a id="forum-login-link" class="forum-button" href="account.html">登录后参与</a>
+            </div>
+        </header>
+
+        <section class="forum-shell" aria-label="论坛内容">
+            <aside class="forum-sidebar">
+                <p class="forum-sidebar__label">版块</p>
+                <nav id="forum-categories" class="forum-categories" aria-label="论坛版块">
+                    <button class="is-active" type="button" data-category="all"><span>全部主题</span><small>ALL</small></button>
+                    <button type="button" data-category="announcements"><span>团部公告</span><small>NOTICE</small></button>
+                    <button type="button" data-category="events"><span>活动安排</span><small>EVENT</small></button>
+                    <button type="button" data-category="tactics"><span>战术讨论</span><small>TACTICS</small></button>
+                    <button type="button" data-category="chat"><span>成员交流</span><small>MESS</small></button>
+                </nav>
+                <div class="forum-rules">
+                    <strong>发言须知</strong>
+                    <p>请保持友好、克制并围绕主题交流。第一版仅支持文字与链接。</p>
+                </div>
+                <details id="moderation-box" class="moderation-box" hidden>
+                    <summary>举报处理 <span id="report-count">0</span></summary>
+                    <div id="report-list" class="report-list"></div>
+                </details>
+            </aside>
+
+            <div class="forum-feed">
+                <div class="forum-feed__heading">
+                    <div><p class="eyebrow">Dispatches</p><h2 id="feed-title">全部主题</h2></div>
+                    <button id="refresh-forum" class="forum-text-button" type="button">刷新</button>
+                </div>
+                <p id="forum-status" class="forum-status" role="status">正在读取论坛……</p>
+                <div id="post-list" class="post-list" aria-live="polite"></div>
+                <button id="load-more-posts" class="forum-button forum-load-more" type="button" hidden>加载更多</button>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="post-composer" class="forum-dialog forum-composer">
+        <form id="post-form">
+            <header><div><p class="eyebrow">New Dispatch</p><h2>发布主题</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="关闭">×</button></header>
+            <label>版块<select name="category" required><option value="announcements">团部公告</option><option value="events">活动安排</option><option value="tactics">战术讨论</option><option value="chat" selected>成员交流</option></select></label>
+            <label>标题<input name="title" type="text" minlength="2" maxlength="80" required></label>
+            <label>正文<textarea name="body" rows="9" minlength="1" maxlength="4000" required placeholder="支持普通文字和网址链接"></textarea></label>
+            <p id="post-form-message" class="forum-form-message" role="status"></p>
+            <footer><span>最多 4000 字</span><button class="forum-button forum-button--primary" type="submit">确认发布</button></footer>
+        </form>
+    </dialog>
+
+    <dialog id="thread-dialog" class="forum-dialog thread-dialog">
+        <article>
+            <header class="thread-dialog__top"><button class="forum-text-button" type="button" data-close-dialog>← 返回主题列表</button><div id="thread-admin-actions" class="thread-admin-actions" hidden></div></header>
+            <div id="thread-post"></div>
+            <section class="thread-comments" aria-labelledby="comments-title">
+                <div class="thread-comments__heading"><h3 id="comments-title">回复</h3><span id="thread-comment-count"></span></div>
+                <div id="comment-list" class="comment-list"></div>
+                <form id="comment-form" class="comment-form" hidden>
+                    <label for="comment-body">参与讨论</label>
+                    <textarea id="comment-body" name="body" rows="4" maxlength="2000" required placeholder="写下你的回复……"></textarea>
+                    <div><p id="comment-message" class="forum-form-message" role="status"></p><button class="forum-button forum-button--primary" type="submit">发表回复</button></div>
+                </form>
+                <p id="comment-gate" class="comment-gate"></p>
+            </section>
+        </article>
+    </dialog>
+
+    <dialog id="report-dialog" class="forum-dialog report-dialog">
+        <form id="report-form">
+            <header><div><p class="eyebrow">Report</p><h2>提交举报</h2></div><button class="dialog-close" type="button" data-close-dialog aria-label="关闭">×</button></header>
+            <input name="target-type" type="hidden"><input name="target-id" type="hidden">
+            <label>请简要说明原因<textarea name="reason" rows="5" minlength="2" maxlength="500" required></textarea></label>
+            <p id="report-message" class="forum-form-message" role="status"></p>
+            <footer><span>举报仅管理员可见</span><button class="forum-button forum-button--primary" type="submit">提交举报</button></footer>
+        </form>
+    </dialog>
+</body>
+</html>

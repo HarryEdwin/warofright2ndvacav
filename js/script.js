@@ -16,6 +16,7 @@ siteNav?.addEventListener('click', (event) => {
 
 const playerScriptUrl = new URL(document.currentScript?.src ?? window.location.href);
 const accountUrl = new URL('../pages/account.html', playerScriptUrl);
+const forumUrl = new URL('../pages/forum.html', playerScriptUrl);
 const navigation = document.querySelector('.site-nav, .detail-header nav');
 
 const rankAbbreviations = {
@@ -29,6 +30,16 @@ window.formatWorMemberName = (nickname, rank) => {
     const abbreviation = rankAbbreviations[rank];
     return abbreviation ? `${abbreviation}.${nickname}` : nickname;
 };
+
+if (navigation && !navigation.querySelector('[data-forum-link]')) {
+    const forumLink = document.createElement('a');
+    forumLink.href = forumUrl.href;
+    forumLink.dataset.forumLink = '';
+    forumLink.className = 'nav-forum-link';
+    forumLink.textContent = '论坛';
+    const accountLink = navigation.querySelector('[data-account-link]');
+    navigation.insertBefore(forumLink, accountLink || null);
+}
 
 if (navigation && !navigation.querySelector('[data-account-link]')) {
     const accountLink = document.createElement('a');

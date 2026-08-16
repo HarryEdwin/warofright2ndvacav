@@ -40,6 +40,9 @@ body::before {
 .site-nav a { position: relative; padding: 12px 2px; font-weight: 600; text-shadow: 0 1px 0 rgba(255,255,255,.8); }
 .site-nav a::after { position: absolute; right: 0; bottom: 7px; left: 0; height: 1px; background: var(--red); content: ""; transform: scaleX(0); transition: transform .25s ease; }
 .site-nav a:hover::after, .site-nav a:focus-visible::after { transform: scaleX(1); }
+.site-nav .nav-forum-link, .detail-header nav .nav-forum-link { margin-block: 7px; padding: 5px 13px; border: 1px solid var(--red); background: var(--red); color: #fffaf0; line-height: 1.7; text-shadow: none; }
+.site-nav .nav-forum-link::after { display: none; }
+.site-nav .nav-forum-link:hover, .detail-header nav .nav-forum-link:hover { background: #9f322d; color: #fff; }
 .nav-dropdown { position: relative; }
 .nav-dropdown summary { position: relative; padding: 12px 16px 12px 2px; cursor: pointer; font-weight: 600; list-style: none; text-shadow: 0 1px 0 rgba(255,255,255,.8); }
 .nav-dropdown summary::-webkit-details-marker { display: none; }
@@ -83,6 +86,16 @@ body::before {
 .section-heading > p:last-child { margin-top: 7px; color: #647078; }
 .guide-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 
+.forum-callout { position: relative; display: grid; margin-bottom: 92px; padding: 34px 40px; grid-template-columns: auto minmax(0, 1fr) auto; gap: 28px; align-items: center; overflow: hidden; border: 1px solid rgba(186,62,53,.38); background: linear-gradient(105deg, rgba(250,246,235,.96), rgba(247,239,223,.86)); box-shadow: 0 20px 52px rgba(35,58,70,.1); }
+.forum-callout::after { position: absolute; top: 0; right: 0; width: 34%; height: 3px; background: var(--red); content: ""; }
+.forum-callout__mark { display: flex; width: 76px; height: 76px; align-items: flex-start; justify-content: center; color: var(--red); font-family: Georgia, serif; line-height: 1; }
+.forum-callout__mark span { font-size: 68px; font-weight: 400; }
+.forum-callout__mark small { margin-top: 13px; font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.forum-callout h2 { color: var(--ink-deep); font-size: 34px; font-weight: 500; letter-spacing: .1em; line-height: 1.25; }
+.forum-callout__copy > p:last-child { max-width: 650px; margin-top: 5px; color: #657279; font-size: 14px; }
+.forum-callout__button { padding: 12px 20px; border: 1px solid var(--ink); color: var(--ink); font-size: 12px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; }
+.forum-callout__button:hover { border-color: var(--red); color: var(--red); }
+
 .about-section { display: grid; margin-bottom: 110px; padding: 60px 7%; grid-template-columns: .8fr 1.2fr; gap: 7%; align-items: center; border: 1px solid rgba(95,129,152,.35); background: rgba(250,246,235,.76); box-shadow: 0 22px 60px rgba(35,58,70,.09); }
 .about-section__emblem img { width: min(100%, 330px); margin: auto; }
 .about-section__copy > p:not(.eyebrow) { margin-top: 18px; font-size: 17px; }
@@ -122,6 +135,11 @@ body::before {
     .hero__wolf { width: min(72vw, 315px); margin-top: -28px; }
     .guide-section { padding-block: 52px 72px; }
     .guide-grid, .company-grid { grid-template-columns: 1fr; }
+    .forum-callout { margin-bottom: 72px; padding: 28px 24px; grid-template-columns: auto 1fr; gap: 18px; }
+    .forum-callout__mark { width: 56px; height: 60px; }
+    .forum-callout__mark span { font-size: 54px; }
+    .forum-callout__mark small { margin-top: 9px; }
+    .forum-callout__button { grid-column: 1 / -1; text-align: center; }
     .about-section { margin-bottom: 74px; padding: 42px 28px; grid-template-columns: 1fr; text-align: center; }
     .about-section__emblem img { width: 210px; }
     .companies { padding-bottom: 74px; }
